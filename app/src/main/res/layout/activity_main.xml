@@ -22,8 +22,6 @@
         app:tvCorner="20dp"
         app:tvShape="square"
         app:tvState="press"
-        app:tvStateBgColorInvalid="#00FF66"
-        app:tvStateBgColorValid="#FF6600"
         app:tvStateTextColorInvalid="#000000"
         app:tvStateTextColorValid="#FFFFFF"
         app:tvUseState="true" />

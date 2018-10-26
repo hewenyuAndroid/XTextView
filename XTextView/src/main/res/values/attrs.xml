@@ -35,6 +35,10 @@
         <attr name="tvStateBgColorInvalid" format="color|reference" />
         <!-- state 有效时的背景颜色 -->
         <attr name="tvStateBgColorValid" format="color|reference" />
+        <!-- state 无效时的边框颜色 -->
+        <attr name="tvStateBorderColorInvalid" format="color|reference" />
+        <!-- state 有效时的边框颜色 -->
+        <attr name="tvStateBorderColorValid" format="color|reference" />
     </declare-styleable>
 
 </resources>

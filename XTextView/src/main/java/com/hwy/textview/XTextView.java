@@ -131,11 +131,15 @@ public class XTextView extends TextView {
      * 是否使用状态
      */
     private boolean useState = false;
-
+    // 文字
     private int mInvalidStateTextColor = Color.TRANSPARENT;
     private int mValidStateTextColor = Color.TRANSPARENT;
+    // 背景
     private int mInvalidStateBgColor = Color.TRANSPARENT;
     private int mValidStateBgColor = Color.TRANSPARENT;
+    // 边框
+    private int mInvalidStateBorderColor = Color.TRANSPARENT;
+    private int mValidStateBorderColor = Color.TRANSPARENT;
 
     // endregion -----------------------
 
@@ -176,6 +180,8 @@ public class XTextView extends TextView {
         mValidStateTextColor = array.getColor(R.styleable.XTextView_tvStateTextColorValid, Color.TRANSPARENT);
         mInvalidStateBgColor = array.getColor(R.styleable.XTextView_tvStateBgColorInvalid, Color.TRANSPARENT);
         mValidStateBgColor = array.getColor(R.styleable.XTextView_tvStateBgColorValid, Color.TRANSPARENT);
+        mInvalidStateBorderColor = array.getColor(R.styleable.XTextView_tvStateBorderColorInvalid, Color.TRANSPARENT);
+        mValidStateBorderColor = array.getColor(R.styleable.XTextView_tvStateBorderColorValid, Color.TRANSPARENT);
 
         // endregion ----------------------
 
@@ -279,6 +285,19 @@ public class XTextView extends TextView {
             mNormalBackground.setColor(tempBgState);
         }
 
+        // 边框颜色
+        if ((mValidStateBorderColor != Color.TRANSPARENT
+                || mInvalidStateBorderColor != Color.TRANSPARENT) && mBorderSize > 0) {
+
+            int[] tempBorder = new int[]{
+                    mValidStateBorderColor,
+                    mInvalidStateBorderColor
+            };
+
+            ColorStateList tempBorderState = new ColorStateList(mColorStates, tempBorder);
+            mNormalBackground.setStroke(mBorderSize, tempBorderState);
+        }
+
     }
 
     /**
@@ -368,6 +387,19 @@ public class XTextView extends TextView {
         this.useState = true;
         this.mValidStateBgColor = validStateColor;
         this.mInvalidStateBgColor = invalidStateColor;
+        setColor();
+    }
+
+    /**
+     * 设置边框状态的颜色
+     *
+     * @param validStateColor
+     * @param invalidStateColor
+     */
+    public void setBorderColor(int validStateColor, int invalidStateColor) {
+        this.useState = true;
+        this.mValidStateBorderColor = validStateColor;
+        this.mInvalidStateBorderColor = invalidStateColor;
         setColor();
     }
 
