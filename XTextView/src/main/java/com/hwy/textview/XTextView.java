@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -331,6 +332,15 @@ public class XTextView extends TextView {
     public void setTextColor(int color) {
         this.useState = false;
         super.setTextColor(color);
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        if (TextUtils.isEmpty(text)) {
+            // 防止空指针异常
+            text = "";
+        }
+        super.setText(text, type);
     }
 
     // region --------------- get/set -------------------
