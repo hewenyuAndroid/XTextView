@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    
+    <declare-styleable name="XTextView">
+        <!-- 圆角 -->
+        <attr name="tvCorner" format="dimension|reference" />
+        <attr name="tvCornerLeftTop" format="dimension|reference" />
+        <attr name="tvCornerRightTop" format="dimension|reference" />
+        <attr name="tvCornerRightBottom" format="dimension|reference" />
+        <attr name="tvCornerLeftBottom" format="dimension|reference" />
+    </declare-styleable>
 
 </resources>
