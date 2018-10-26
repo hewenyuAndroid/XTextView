@@ -17,11 +17,9 @@
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         app:tvBorderColor="#0188FB"
-        app:tvBorderDashGap="5dp"
-        app:tvBorderDashWidth="10dp"
         app:tvBorderSize="2dp"
         app:tvCorner="20dp"
-        app:tvShape="circle" />
+        app:tvShape="square" />
 
 
 </RelativeLayout>

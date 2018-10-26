@@ -54,12 +54,24 @@ public class XTextView extends TextView {
      */
     private int mCorner = 0;
 
+    /**
+     * 左上角
+     */
     private int mCornerLeftTop = DEFAULT_CORNER_VALUE;
 
+    /**
+     * 右上角
+     */
     private int mCornerRightTop = DEFAULT_CORNER_VALUE;
 
+    /**
+     * 右下角
+     */
     private int mCornerRightBottom = DEFAULT_CORNER_VALUE;
 
+    /**
+     * 左下角
+     */
     private int mCornerLeftBottom = DEFAULT_CORNER_VALUE;
 
     // 四个圆角的半径,左上角开始顺时针方向，每两个值标示一个圆角
