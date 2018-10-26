@@ -2,12 +2,24 @@
 <resources>
 
     <declare-styleable name="XTextView">
+        <!-- 形状 -->
+        <attr name="tvShape" format="enum">
+            <enum name="square" value="0" />
+            <enum name="circle" value="1" />
+        </attr>
         <!-- 圆角 -->
         <attr name="tvCorner" format="dimension|reference" />
         <attr name="tvCornerLeftTop" format="dimension|reference" />
         <attr name="tvCornerRightTop" format="dimension|reference" />
         <attr name="tvCornerRightBottom" format="dimension|reference" />
         <attr name="tvCornerLeftBottom" format="dimension|reference" />
+        <!-- 边框 -->
+        <attr name="tvBorderSize" format="dimension|reference" />
+        <attr name="tvBorderColor" format="color|reference" />
+        <!-- 边框，虚线时线段的长度 -->
+        <attr name="tvBorderDashWidth" format="dimension|reference" />
+        <!-- 边框，虚线时线段之间的距离 -->
+        <attr name="tvBorderDashGap" format="dimension|reference" />
     </declare-styleable>
 
 </resources>
