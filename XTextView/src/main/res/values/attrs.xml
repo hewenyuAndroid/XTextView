@@ -20,6 +20,7 @@
         <attr name="tvBorderDashWidth" format="dimension|reference" />
         <!-- 边框，虚线时线段之间的距离 -->
         <attr name="tvBorderDashGap" format="dimension|reference" />
+
         <!-- 状态: press/enable -->
         <attr name="tvState" format="enum">
             <enum name="press" value="0" />
@@ -39,6 +40,22 @@
         <attr name="tvStateBorderColorInvalid" format="color|reference" />
         <!-- state 有效时的边框颜色 -->
         <attr name="tvStateBorderColorValid" format="color|reference" />
+
+        <!-- 底部的分隔线 -->
+        <attr name="tvLineColor" format="color|reference" />
+        <attr name="tvBottomLineSize" format="dimension|reference" />
+        <attr name="tvBottomLineMarginLeft" format="dimension|reference" />
+        <attr name="tvBottomLineMarginRight" format="dimension|reference" />
+        <attr name="tvTopLineSize" format="dimension|reference" />
+        <attr name="tvTopLineMarginLeft" format="dimension|reference" />
+        <attr name="tvTopLineMarginRight" format="dimension|reference" />
+        <attr name="tvLeftLineSize" format="dimension|reference" />
+        <attr name="tvLeftLineMarginTop" format="dimension|reference" />
+        <attr name="tvLeftLineMarginBottom" format="dimension|reference" />
+        <attr name="tvRightLineSize" format="dimension|reference" />
+        <attr name="tvRightLineMarginTop" format="dimension|reference" />
+        <attr name="tvRightLineMarginBottom" format="dimension|reference" />
+
     </declare-styleable>
 
 </resources>

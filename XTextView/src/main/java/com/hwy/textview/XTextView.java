@@ -4,7 +4,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -143,6 +146,36 @@ public class XTextView extends TextView {
 
     // endregion -----------------------
 
+    // region ---------- 四周线条 -------
+
+    private Paint mLinePaint;
+
+    private Rect mLineRect;
+
+    /**
+     * 线条的颜色
+     */
+    private int mLineColor = Color.TRANSPARENT;
+
+    private int mBottomLineSize = 0;
+    private int mBottomLineMarginLeft = 0;
+    private int mBottomLineMarginRight = 0;
+
+    private int mTopLineSize = 0;
+    private int mTopLineMarginLeft = 0;
+    private int mTopLineMarginRight = 0;
+
+    private int mLeftLineSize = 0;
+    private int mLeftLineMarginTop = 0;
+    private int mLeftLineMarginBottom = 0;
+
+    private int mRightLineSize = 0;
+    private int mRightLineMarginTop = 0;
+    private int mRightLineMarginBottom = 0;
+
+
+    // endregion -----------------------
+
     public XTextView(Context context) {
         this(context, null);
     }
@@ -185,6 +218,26 @@ public class XTextView extends TextView {
 
         // endregion ----------------------
 
+        // region --------- 四周线条 ------
+        mLineColor = array.getColor(R.styleable.XTextView_tvLineColor, Color.TRANSPARENT);
+        // bottomLine
+        mBottomLineSize = array.getDimensionPixelSize(R.styleable.XTextView_tvBottomLineSize, 0);
+        mBottomLineMarginLeft = array.getDimensionPixelSize(R.styleable.XTextView_tvBottomLineMarginLeft, 0);
+        mBottomLineMarginRight = array.getDimensionPixelSize(R.styleable.XTextView_tvBottomLineMarginRight, 0);
+        // topLine
+        mTopLineSize = array.getDimensionPixelSize(R.styleable.XTextView_tvTopLineSize, 0);
+        mTopLineMarginLeft = array.getDimensionPixelSize(R.styleable.XTextView_tvTopLineMarginLeft, 0);
+        mTopLineMarginRight = array.getDimensionPixelSize(R.styleable.XTextView_tvTopLineMarginRight, 0);
+        // leftLine
+        mLeftLineSize = array.getDimensionPixelSize(R.styleable.XTextView_tvLeftLineSize, 0);
+        mLeftLineMarginTop = array.getDimensionPixelSize(R.styleable.XTextView_tvLeftLineMarginTop, 0);
+        mLeftLineMarginBottom = array.getDimensionPixelSize(R.styleable.XTextView_tvLeftLineMarginBottom, 0);
+        // rightLine
+        mRightLineSize = array.getDimensionPixelSize(R.styleable.XTextView_tvRightLineSize, 0);
+        mRightLineMarginTop = array.getDimensionPixelSize(R.styleable.XTextView_tvRightLineMarginTop, 0);
+        mRightLineMarginBottom = array.getDimensionPixelSize(R.styleable.XTextView_tvRightLineMarginBottom, 0);
+        // endregion ----------------------
+
         // region --------- 名称 ----------
 
         // endregion ----------------------
@@ -195,6 +248,13 @@ public class XTextView extends TextView {
     }
 
     private void init() {
+
+        mLinePaint = new Paint();
+        mLinePaint.setDither(true);
+        mLinePaint.setAntiAlias(true);
+        mLinePaint.setStyle(Paint.Style.FILL);
+        mLinePaint.setColor(mLineColor);
+        mLineRect = new Rect();
 
         // 更新背景
         updateBackground();
@@ -214,6 +274,8 @@ public class XTextView extends TextView {
             Drawable drawable = getBackground();
             if (drawable instanceof ColorDrawable) {
                 mNormalBackground.setColor(((ColorDrawable) drawable).getColor());
+            } else {
+                mNormalBackground.setColor(Color.TRANSPARENT);
             }
             setBackground(mNormalBackground);
         }
@@ -239,7 +301,6 @@ public class XTextView extends TextView {
     /**
      * 设置文字/背景状态颜色
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setColor() {
         if (!useState) {
             return;
@@ -272,30 +333,34 @@ public class XTextView extends TextView {
             setTextColor(tempTextState);
         }
 
-        // 背景颜色
-        if (mValidStateBgColor != Color.TRANSPARENT
-                || mInvalidStateBgColor != Color.TRANSPARENT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            int[] tempBg = new int[]{
-                    mValidStateBgColor,
-                    mInvalidStateBgColor
-            };
+            // 背景颜色
+            if (mValidStateBgColor != Color.TRANSPARENT
+                    || mInvalidStateBgColor != Color.TRANSPARENT) {
 
-            ColorStateList tempBgState = new ColorStateList(mColorStates, tempBg);
-            mNormalBackground.setColor(tempBgState);
-        }
+                int[] tempBg = new int[]{
+                        mValidStateBgColor,
+                        mInvalidStateBgColor
+                };
 
-        // 边框颜色
-        if ((mValidStateBorderColor != Color.TRANSPARENT
-                || mInvalidStateBorderColor != Color.TRANSPARENT) && mBorderSize > 0) {
+                ColorStateList tempBgState = new ColorStateList(mColorStates, tempBg);
+                mNormalBackground.setColor(tempBgState);
+            }
 
-            int[] tempBorder = new int[]{
-                    mValidStateBorderColor,
-                    mInvalidStateBorderColor
-            };
+            // 边框颜色
+            if ((mValidStateBorderColor != Color.TRANSPARENT
+                    || mInvalidStateBorderColor != Color.TRANSPARENT) && mBorderSize > 0) {
 
-            ColorStateList tempBorderState = new ColorStateList(mColorStates, tempBorder);
-            mNormalBackground.setStroke(mBorderSize, tempBorderState);
+                int[] tempBorder = new int[]{
+                        mValidStateBorderColor,
+                        mInvalidStateBorderColor
+                };
+
+                ColorStateList tempBorderState = new ColorStateList(mColorStates, tempBorder);
+                mNormalBackground.setStroke(mBorderSize, tempBorderState);
+            }
+
         }
 
     }
@@ -339,6 +404,55 @@ public class XTextView extends TextView {
         mCornerRadii[7] = mCornerLeftBottom > INVALIDATE_CORNER_VALUE ? mCornerLeftBottom : mCorner;
 
         mNormalBackground.setCornerRadii(mCornerRadii);
+    }
+
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        // 绘制四周线条
+        drawLines(canvas);
+
+    }
+
+    /**
+     * 绘制四周的线条
+     */
+    private void drawLines(Canvas canvas) {
+
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+
+        if (mBottomLineSize > 0) {
+            mLineRect.left = mBottomLineMarginLeft;
+            mLineRect.top = height - mBottomLineSize;
+            mLineRect.right = width - mBottomLineMarginRight;
+            mLineRect.bottom = height;
+            canvas.drawRect(mLineRect, mLinePaint);
+        }
+        if (mTopLineSize > 0) {
+            mLineRect.top = 0;
+            mLineRect.bottom = mTopLineSize;
+            mLineRect.left = mTopLineMarginLeft;
+            mLineRect.right = width - mTopLineMarginRight;
+            canvas.drawRect(mLineRect, mLinePaint);
+        }
+        if (mLeftLineSize > 0) {
+            mLineRect.left = 0;
+            mLineRect.right = mLeftLineSize;
+            mLineRect.top = mLeftLineMarginTop;
+            mLineRect.bottom = height - mLeftLineMarginBottom;
+            canvas.drawRect(mLineRect, mLinePaint);
+        }
+        if (mRightLineSize > 0) {
+            mLineRect.left = width - mRightLineSize;
+            mLineRect.right = width;
+            mLineRect.top = mRightLineMarginTop;
+            mLineRect.bottom = height - mRightLineMarginBottom;
+            canvas.drawRect(mLineRect, mLinePaint);
+        }
+
     }
 
     @Override
