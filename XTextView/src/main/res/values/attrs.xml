@@ -20,6 +20,21 @@
         <attr name="tvBorderDashWidth" format="dimension|reference" />
         <!-- 边框，虚线时线段之间的距离 -->
         <attr name="tvBorderDashGap" format="dimension|reference" />
+        <!-- 状态: press/enable -->
+        <attr name="tvState" format="enum">
+            <enum name="press" value="0" />
+            <enum name="enable" value="1" />
+        </attr>
+        <!-- 是否使用状态 -->
+        <attr name="tvUseState" format="boolean" />
+        <!-- state无效时的文本颜色 -->
+        <attr name="tvStateTextColorInvalid" format="color|reference" />
+        <!-- state有效时的文本颜色 -->
+        <attr name="tvStateTextColorValid" format="color|reference" />
+        <!-- state 无效时的背景颜色 -->
+        <attr name="tvStateBgColorInvalid" format="color|reference" />
+        <!-- state 有效时的背景颜色 -->
+        <attr name="tvStateBgColorValid" format="color|reference" />
     </declare-styleable>
 
 </resources>

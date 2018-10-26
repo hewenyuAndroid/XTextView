@@ -2,6 +2,7 @@ package com.hwy.textview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,6 +19,7 @@ import android.widget.TextView;
  */
 public class XTextView extends TextView {
 
+    // region ---------- 常量 -----------
     /**
      * 方形
      */
@@ -31,7 +33,16 @@ public class XTextView extends TextView {
     /**
      * 圆角默认的无效值
      */
-    private static final int DEFAULT_CORNER_VALUE = -1;
+    private static final int INVALIDATE_CORNER_VALUE = -1;
+
+    /**
+     * 按压的状态
+     */
+    private static final int STATE_PRESS = 0;
+
+    private static final int STATE_ENABLE = 1;
+
+    // endregion ------------------------
 
     // region ---------- 背景 -----------
 
@@ -57,22 +68,22 @@ public class XTextView extends TextView {
     /**
      * 左上角
      */
-    private int mCornerLeftTop = DEFAULT_CORNER_VALUE;
+    private int mCornerLeftTop = INVALIDATE_CORNER_VALUE;
 
     /**
      * 右上角
      */
-    private int mCornerRightTop = DEFAULT_CORNER_VALUE;
+    private int mCornerRightTop = INVALIDATE_CORNER_VALUE;
 
     /**
      * 右下角
      */
-    private int mCornerRightBottom = DEFAULT_CORNER_VALUE;
+    private int mCornerRightBottom = INVALIDATE_CORNER_VALUE;
 
     /**
      * 左下角
      */
-    private int mCornerLeftBottom = DEFAULT_CORNER_VALUE;
+    private int mCornerLeftBottom = INVALIDATE_CORNER_VALUE;
 
     // 四个圆角的半径,左上角开始顺时针方向，每两个值标示一个圆角
     private float[] mCornerRadii = new float[8];
@@ -103,6 +114,30 @@ public class XTextView extends TextView {
 
     // endregion -----------------------
 
+    // region ---------- 颜色 -----------
+
+    /**
+     * 颜色状态
+     */
+    private int[][] mColorStates = new int[2][];
+
+    /**
+     * TextView 的状态：Press、enable
+     */
+    private int mState = STATE_PRESS;
+
+    /**
+     * 是否使用状态
+     */
+    private boolean useState = false;
+
+    private int mInvalidStateTextColor = Color.TRANSPARENT;
+    private int mValidStateTextColor = Color.TRANSPARENT;
+    private int mInvalidStateBgColor = Color.TRANSPARENT;
+    private int mValidStateBgColor = Color.TRANSPARENT;
+
+    // endregion -----------------------
+
     public XTextView(Context context) {
         this(context, null);
     }
@@ -120,10 +155,10 @@ public class XTextView extends TextView {
 
         // region --------- 圆角 ----------
         mCorner = array.getDimensionPixelSize(R.styleable.XTextView_tvCorner, 0);
-        mCornerLeftTop = array.getDimensionPixelSize(R.styleable.XTextView_tvCornerLeftTop, DEFAULT_CORNER_VALUE);
-        mCornerRightTop = array.getDimensionPixelSize(R.styleable.XTextView_tvCornerRightTop, DEFAULT_CORNER_VALUE);
-        mCornerRightBottom = array.getDimensionPixelSize(R.styleable.XTextView_tvCornerRightBottom, DEFAULT_CORNER_VALUE);
-        mCornerLeftBottom = array.getDimensionPixelSize(R.styleable.XTextView_tvCornerLeftBottom, DEFAULT_CORNER_VALUE);
+        mCornerLeftTop = array.getDimensionPixelSize(R.styleable.XTextView_tvCornerLeftTop, INVALIDATE_CORNER_VALUE);
+        mCornerRightTop = array.getDimensionPixelSize(R.styleable.XTextView_tvCornerRightTop, INVALIDATE_CORNER_VALUE);
+        mCornerRightBottom = array.getDimensionPixelSize(R.styleable.XTextView_tvCornerRightBottom, INVALIDATE_CORNER_VALUE);
+        mCornerLeftBottom = array.getDimensionPixelSize(R.styleable.XTextView_tvCornerLeftBottom, INVALIDATE_CORNER_VALUE);
         // endregion ----------------------
 
         // region --------- 边框 ----------
@@ -131,6 +166,16 @@ public class XTextView extends TextView {
         mBorderColor = array.getColor(R.styleable.XTextView_tvBorderColor, Color.TRANSPARENT);
         mBorderDashWidth = array.getDimensionPixelSize(R.styleable.XTextView_tvBorderDashWidth, 0);
         mBorderDashGap = array.getDimensionPixelSize(R.styleable.XTextView_tvBorderDashGap, 0);
+        // endregion ----------------------
+
+        // region --------- 颜色 ----------
+        mState = array.getInt(R.styleable.XTextView_tvState, STATE_PRESS);
+        useState = array.getBoolean(R.styleable.XTextView_tvUseState, false);
+        mInvalidStateTextColor = array.getColor(R.styleable.XTextView_tvStateTextColorInvalid, Color.TRANSPARENT);
+        mValidStateTextColor = array.getColor(R.styleable.XTextView_tvStateTextColorValid, Color.TRANSPARENT);
+        mInvalidStateBgColor = array.getColor(R.styleable.XTextView_tvStateBgColorInvalid, Color.TRANSPARENT);
+        mValidStateBgColor = array.getColor(R.styleable.XTextView_tvStateBgColorValid, Color.TRANSPARENT);
+
         // endregion ----------------------
 
         // region --------- 名称 ----------
@@ -148,6 +193,7 @@ public class XTextView extends TextView {
         updateBackground();
 
     }
+
 
     /**
      * 更新背景
@@ -178,6 +224,59 @@ public class XTextView extends TextView {
         setCorner();
         // 设置边框
         setBorder();
+        // 设置颜色
+        setColor();
+
+    }
+
+    /**
+     * 设置文字/背景状态颜色
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setColor() {
+        if (!useState) {
+            return;
+        }
+
+        setClickable(true);
+
+        if (mState == STATE_PRESS) {
+            // 按压状态
+            mColorStates[0] = new int[]{android.R.attr.state_pressed};
+            mColorStates[1] = new int[]{-android.R.attr.state_pressed};
+        } else if (mState == STATE_ENABLE) {
+            // enable状态
+            mColorStates[0] = new int[]{android.R.attr.state_enabled};
+            mColorStates[1] = new int[]{-android.R.attr.state_enabled};
+        } else {
+            return;
+        }
+
+        // 文字颜色
+        if (mValidStateTextColor != Color.TRANSPARENT
+                || mInvalidStateTextColor != Color.TRANSPARENT) {
+
+            int[] tempText = new int[]{
+                    mValidStateTextColor,
+                    mInvalidStateTextColor
+            };
+
+            ColorStateList tempTextState = new ColorStateList(mColorStates, tempText);
+            setTextColor(tempTextState);
+        }
+
+        // 背景颜色
+        if (mValidStateBgColor != Color.TRANSPARENT
+                || mInvalidStateBgColor != Color.TRANSPARENT) {
+
+            int[] tempBg = new int[]{
+                    mValidStateBgColor,
+                    mInvalidStateBgColor
+            };
+
+            ColorStateList tempBgState = new ColorStateList(mColorStates, tempBg);
+            mNormalBackground.setColor(tempBgState);
+        }
 
     }
 
@@ -207,19 +306,149 @@ public class XTextView extends TextView {
         }
 
         // 左上角
-        mCornerRadii[0] = mCornerLeftTop > DEFAULT_CORNER_VALUE ? mCornerLeftTop : mCorner;
-        mCornerRadii[1] = mCornerLeftTop > DEFAULT_CORNER_VALUE ? mCornerLeftTop : mCorner;
+        mCornerRadii[0] = mCornerLeftTop > INVALIDATE_CORNER_VALUE ? mCornerLeftTop : mCorner;
+        mCornerRadii[1] = mCornerLeftTop > INVALIDATE_CORNER_VALUE ? mCornerLeftTop : mCorner;
         // 右上角
-        mCornerRadii[2] = mCornerRightTop > DEFAULT_CORNER_VALUE ? mCornerRightTop : mCorner;
-        mCornerRadii[3] = mCornerRightTop > DEFAULT_CORNER_VALUE ? mCornerRightTop : mCorner;
+        mCornerRadii[2] = mCornerRightTop > INVALIDATE_CORNER_VALUE ? mCornerRightTop : mCorner;
+        mCornerRadii[3] = mCornerRightTop > INVALIDATE_CORNER_VALUE ? mCornerRightTop : mCorner;
         // 右下角
-        mCornerRadii[4] = mCornerRightBottom > DEFAULT_CORNER_VALUE ? mCornerRightBottom : mCorner;
-        mCornerRadii[5] = mCornerRightBottom > DEFAULT_CORNER_VALUE ? mCornerRightBottom : mCorner;
+        mCornerRadii[4] = mCornerRightBottom > INVALIDATE_CORNER_VALUE ? mCornerRightBottom : mCorner;
+        mCornerRadii[5] = mCornerRightBottom > INVALIDATE_CORNER_VALUE ? mCornerRightBottom : mCorner;
         // 左下角
-        mCornerRadii[6] = mCornerLeftBottom > DEFAULT_CORNER_VALUE ? mCornerLeftBottom : mCorner;
-        mCornerRadii[7] = mCornerLeftBottom > DEFAULT_CORNER_VALUE ? mCornerLeftBottom : mCorner;
+        mCornerRadii[6] = mCornerLeftBottom > INVALIDATE_CORNER_VALUE ? mCornerLeftBottom : mCorner;
+        mCornerRadii[7] = mCornerLeftBottom > INVALIDATE_CORNER_VALUE ? mCornerLeftBottom : mCorner;
 
         mNormalBackground.setCornerRadii(mCornerRadii);
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        setColor();
+    }
+
+    @Override
+    public void setTextColor(int color) {
+        this.useState = false;
+        super.setTextColor(color);
+    }
+
+    // region --------------- get/set -------------------
+
+    /**
+     * 设置文字状态颜色
+     *
+     * @param validStateColor
+     * @param invalidStateColor
+     */
+    public void setTextColor(int validStateColor, int invalidStateColor) {
+        this.useState = true;
+        this.mValidStateTextColor = validStateColor;
+        this.mInvalidStateTextColor = invalidStateColor;
+        setColor();
+    }
+
+    /**
+     * 设置背景颜状态颜色
+     *
+     * @param validStateColor
+     * @param invalidStateColor
+     */
+    public void setBackgroundColor(int validStateColor, int invalidStateColor) {
+        this.useState = true;
+        this.mValidStateBgColor = validStateColor;
+        this.mInvalidStateBgColor = invalidStateColor;
+        setColor();
+    }
+
+    /**
+     * 是否使用状态颜色
+     *
+     * @param useState
+     */
+    public void useState(boolean useState) {
+        this.useState = useState;
+        if (!useState) {
+            if (mState == STATE_PRESS) {
+                setTextColor(mInvalidStateTextColor);
+                setBackgroundColor(mInvalidStateBgColor);
+            } else if (mState == STATE_ENABLE) {
+                setTextColor(mValidStateTextColor);
+                setBackgroundColor(mValidStateBgColor);
+            }
+        }
+    }
+
+    /**
+     * 设置圆角
+     *
+     * @param corner
+     */
+    public void setCorner(int corner) {
+        this.mCorner = corner;
+        mCornerLeftTop = INVALIDATE_CORNER_VALUE;
+        mCornerRightTop = INVALIDATE_CORNER_VALUE;
+        mCornerRightBottom = INVALIDATE_CORNER_VALUE;
+        mCornerLeftBottom = INVALIDATE_CORNER_VALUE;
+        setCorner();
+    }
+
+    /**
+     * 设置圆角
+     *
+     * @param leftTop
+     * @param rightTop
+     * @param rightBottom
+     * @param leftBottom
+     */
+    public void setCorner(int leftTop, int rightTop, int rightBottom, int leftBottom) {
+        mCornerLeftTop = leftTop;
+        mCornerRightTop = rightTop;
+        mCornerRightBottom = rightBottom;
+        mCornerLeftBottom = leftBottom;
+        setCorner();
+    }
+
+    /**
+     * 设置边框颜色
+     *
+     * @param borderColor
+     */
+    public void setBorderColor(int borderColor) {
+        this.mBorderColor = borderColor;
+        setBorder();
+    }
+
+    /**
+     * 设置边框大小
+     *
+     * @param borderSize
+     */
+    public void setBorderSize(int borderSize) {
+        this.mBorderSize = borderSize;
+        setBorder();
+    }
+
+    /**
+     * 设置边框虚线的线段长度
+     *
+     * @param dashWidth
+     */
+    public void setBorderDashWidth(int dashWidth) {
+        this.mBorderDashWidth = dashWidth;
+        setBorder();
+    }
+
+    /**
+     * 设置边框虚线的间距
+     *
+     * @param dashGap
+     */
+    public void setBorderDashGap(int dashGap) {
+        this.mBorderDashGap = dashGap;
+        setBorder();
+    }
+
+    // endregion -----------------------------------
 
 }

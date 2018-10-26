@@ -8,6 +8,7 @@
 
 
     <com.hwy.textview.XTextView
+        android:id="@+id/tv"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"
@@ -19,7 +20,13 @@
         app:tvBorderColor="#0188FB"
         app:tvBorderSize="2dp"
         app:tvCorner="20dp"
-        app:tvShape="square" />
+        app:tvShape="square"
+        app:tvState="press"
+        app:tvStateBgColorInvalid="#00FF66"
+        app:tvStateBgColorValid="#FF6600"
+        app:tvStateTextColorInvalid="#000000"
+        app:tvStateTextColorValid="#FFFFFF"
+        app:tvUseState="true" />
 
 
 </RelativeLayout>
