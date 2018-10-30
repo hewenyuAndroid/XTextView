@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="bgColor">#FF6600</color>
+    <color name="textColor">#333333</color>
+    <color name="borderColor">#99CCFF</color>
+    <color name="white">#FFFFFF</color>
+
 </resources>

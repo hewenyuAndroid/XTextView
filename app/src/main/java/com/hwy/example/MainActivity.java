@@ -7,17 +7,11 @@ import com.hwy.textview.XTextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private XTextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        tv = findViewById(R.id.tv);
-        tv.setDrawableSize(60, 60);
-        tv.setBadgeStyle(XTextView.BadgeStyle.NUMBER);
-        tv.setBadgeRadius(20);
 
 
     }

@@ -99,6 +99,13 @@
         <!-- 指定 Drawable 的宽高-->
         <attr name="tvDrawableWidth" format="dimension|reference" />
         <attr name="tvDrawableHeight" format="dimension|reference" />
+        <!-- 指定宽高作用的方向 -->
+        <attr name="tvDrawableDirection" format="enum">
+            <enum name="left" value="0" />
+            <enum name="top" value="1" />
+            <enum name="right" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
         <!-- 设置了 Drawable 后，显示的内容是否居中,left,top有效 -->
         <attr name="tvDrawableCenter" format="boolean" />
 

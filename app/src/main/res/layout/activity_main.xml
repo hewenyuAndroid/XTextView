@@ -1,61 +1,433 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="#EBEBEB"
     tools:context=".MainActivity">
 
-    <com.hwy.textview.XTextView
-        android:id="@+id/tv"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#EBEBEB"
-        android:drawableLeft="@mipmap/icon_scan"
-        android:drawablePadding="5dp"
-        android:gravity="center_vertical|right"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="张三"
-        android:textColor="#666666"
-        android:textSize="14sp"
-        app:tvBadgeLocal="drawable"
-        app:tvBadgeRadius="3dp"
-        app:tvBadgeStyle="dot"
-        app:tvBadgeText="1"
-        app:tvBadgeTextSize="10sp"
-        app:tvBottomLineMarginLeft="20dp"
-        app:tvBottomLineSize="1px"
-        app:tvDrawableHeight="30dp"
-        app:tvDrawableWidth="30dp"
-        app:tvLineColor="#777777"
-        app:tvTagGravity="leftTop"
-        app:tvTagPadding="10dp"
-        app:tvTagSeparator=":"
-        app:tvTagText="姓名"
-        app:tvTagTextColor="#666666"
-        app:tvTagTextSize="14sp"
-        app:tvUseTagSeparator="false" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <com.hwy.textview.XTextView
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:background="#FF6600"
-        android:drawableLeft="@mipmap/icon"
-        android:drawablePadding="5dp"
-        android:text="我"
-        android:textColor="#333333"
-        android:textSize="14sp"
-        app:tvBadgeBgColor="#FFFFFF"
-        app:tvBadgeLocal="drawable"
-        app:tvBadgeRadius="6dp"
-        app:tvBadgeText="2"
-        app:tvBadgeTextColor="#777777"
-        app:tvBadgeTextSize="10sp"
-        app:tvDrawableCenter="true"
-        app:tvDrawableHeight="20dp"
-        app:tvDrawableWidth="20dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.hwy.textview.XTextView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="20dp"
+                android:background="@color/bgColor"
+                android:gravity="center"
+                android:text="圆形"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:tvShape="circle" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:layout_margin="20dp"
+                android:background="@color/bgColor"
+                android:gravity="center"
+                android:text="圆形带\nBorder"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:tvBorderColor="@color/borderColor"
+                app:tvBorderSize="8dp"
+                app:tvShape="circle" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="20dp"
+                android:background="@color/bgColor"
+                android:gravity="center"
+                android:text="四个圆角"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:tvCorner="12dp"
+                app:tvShape="square" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.hwy.textview.XTextView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="20dp"
+                android:background="@color/bgColor"
+                android:gravity="center"
+                android:text="圆角带\nBorder"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:tvBorderColor="@color/borderColor"
+                app:tvBorderSize="8dp"
+                app:tvCorner="12dp"
+                app:tvShape="square" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:layout_margin="20dp"
+                android:background="@color/bgColor"
+                android:gravity="center"
+                android:text="指定左侧圆角"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:tvCornerLeftBottom="20dp"
+                app:tvCornerLeftTop="20dp"
+                app:tvShape="square" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="20dp"
+                android:background="@color/bgColor"
+                android:gravity="center"
+                android:text="指定右侧圆角"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:tvCornerRightBottom="20dp"
+                app:tvCornerRightTop="20dp"
+                app:tvShape="square" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.hwy.textview.XTextView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="20dp"
+                android:background="@color/bgColor"
+                android:gravity="center"
+                android:text="press变换"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:tvBorderColor="@color/borderColor"
+                app:tvBorderSize="8dp"
+                app:tvCorner="12dp"
+                app:tvShape="square"
+                app:tvState="press"
+                app:tvStateBgColorInvalid="@color/bgColor"
+                app:tvStateBgColorValid="@color/colorAccent"
+                app:tvStateBorderColorInvalid="@color/borderColor"
+                app:tvStateBorderColorValid="@color/colorPrimaryDark"
+                app:tvStateTextColorInvalid="@color/white"
+                app:tvStateTextColorValid="@color/textColor"
+                app:tvUseState="true" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:gravity="center_vertical|left"
+                android:paddingLeft="20dp"
+                android:text="hewenyu"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvBottomLineSize="1dp"
+                app:tvLineColor="@color/textColor"
+                app:tvTagPadding="10dp"
+                app:tvTagText="姓名"
+                app:tvTagTextColor="@color/textColor"
+                app:tvTagTextSize="14sp"
+                app:tvUseTagSeparator="true" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:gravity="center_vertical|right"
+                android:paddingLeft="20dp"
+                android:paddingRight="12dp"
+                android:text="男"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvBottomLineSize="1dp"
+                app:tvLineColor="@color/textColor"
+                app:tvTagPadding="10dp"
+                app:tvTagText="性别"
+                app:tvTagTextColor="@color/textColor"
+                app:tvTagTextSize="14sp"
+                app:tvUseTagSeparator="false" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.hwy.textview.XTextView
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="12dp"
+                    android:text="报警"
+                    android:textColor="@color/textColor"
+                    android:textSize="14sp"
+                    app:tvBottomLineMarginLeft="20dp"
+                    app:tvLineColor="@color/textColor"
+                    app:tvRightLineSize="1dp"
+                    app:tvTagPadding="10dp"
+                    app:tvTagText="状态"
+                    app:tvTagTextColor="@color/textColor"
+                    app:tvTagTextSize="14sp"
+                    app:tvUseTagSeparator="true" />
+
+                <com.hwy.textview.XTextView
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="12dp"
+                    android:text="报警"
+                    android:textColor="@color/textColor"
+                    android:textSize="14sp"
+                    app:tvBottomLineMarginLeft="20dp"
+                    app:tvLineColor="@color/textColor"
+                    app:tvTagPadding="10dp"
+                    app:tvTagText="状态"
+                    app:tvTagTextColor="@color/textColor"
+                    app:tvTagTextSize="14sp"
+                    app:tvUseTagSeparator="true" />
+
+            </LinearLayout>
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:gravity="center_vertical|left"
+                android:paddingLeft="20dp"
+                android:text="tag红点提示"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBadgeLocal="tag"
+                app:tvBadgeRadius="3dp"
+                app:tvBadgeStyle="dot"
+                app:tvBadgeText="2"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvBottomLineSize="1dp"
+                app:tvLineColor="@color/textColor"
+                app:tvTagPadding="10dp"
+                app:tvTagText="消息"
+                app:tvTagTextColor="@color/textColor"
+                app:tvTagTextSize="14sp"
+                app:tvTopLineMarginLeft="20dp"
+                app:tvTopLineSize="1dp"
+                app:tvUseTagSeparator="true" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:gravity="center_vertical|right"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="tag数字提示"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBadgeLocal="tag"
+                app:tvBadgeRadius="10dp"
+                app:tvBadgeStyle="number"
+                app:tvBadgeText="2"
+                app:tvBadgeTextColor="@color/white"
+                app:tvBadgeTextSize="12sp"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvBottomLineSize="1dp"
+                app:tvLineColor="@color/textColor"
+                app:tvTagPadding="10dp"
+                app:tvTagText="消息"
+                app:tvTagTextColor="@color/textColor"
+                app:tvTagTextSize="14sp"
+                app:tvUseTagSeparator="true" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:gravity="center_vertical|right"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="text红点提示"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBadgeLocal="text"
+                app:tvBadgeRadius="3dp"
+                app:tvBadgeStyle="dot"
+                app:tvBadgeText="2"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvBottomLineSize="1dp"
+                app:tvLineColor="@color/textColor"
+                app:tvTagPadding="10dp"
+                app:tvTagText="消息"
+                app:tvTagTextColor="@color/textColor"
+                app:tvTagTextSize="14sp"
+                app:tvTopLineMarginLeft="20dp"
+                app:tvTopLineSize="1dp"
+                app:tvUseTagSeparator="true" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:gravity="center_vertical|left"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="text数字提示"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBadgeLocal="text"
+                app:tvBadgeRadius="10dp"
+                app:tvBadgeStyle="number"
+                app:tvBadgeText="1"
+                app:tvBadgeTextColor="@color/white"
+                app:tvBadgeTextSize="12sp"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvBottomLineSize="1dp"
+                app:tvLineColor="@color/textColor"
+                app:tvTagPadding="10dp"
+                app:tvTagText="消息"
+                app:tvTagTextColor="@color/textColor"
+                app:tvTagTextSize="14sp"
+                app:tvUseTagSeparator="true" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:drawableLeft="@mipmap/icon"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical|left"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="指定Drawable大小30dp,红点提示在drawable上"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBadgeLocal="drawable"
+                app:tvBadgeRadius="5dp"
+                app:tvBadgeStyle="dot"
+                app:tvBadgeText="1"
+                app:tvBadgeTextColor="@color/white"
+                app:tvBadgeTextSize="12sp"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvBottomLineSize="1dp"
+                app:tvDrawableHeight="30dp"
+                app:tvDrawableWidth="30dp"
+                app:tvLineColor="@color/textColor"
+                app:tvTagPadding="10dp"
+                app:tvTagText="消息"
+                app:tvTagTextColor="@color/textColor"
+                app:tvTagTextSize="14sp"
+                app:tvUseTagSeparator="true" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:drawableLeft="@mipmap/icon"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical|left"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="指定Drawable大小20dp,数字提示在drawable上"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBadgeLocal="drawable"
+                app:tvBadgeRadius="10dp"
+                app:tvBadgeStyle="number"
+                app:tvBadgeText="1"
+                app:tvBadgeTextColor="@color/white"
+                app:tvBadgeTextSize="12sp"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvBottomLineSize="1dp"
+                app:tvDrawableHeight="20dp"
+                app:tvDrawableWidth="20dp"
+                app:tvLineColor="@color/textColor"
+                app:tvTagPadding="10dp"
+                app:tvTagText="消息"
+                app:tvTagTextColor="@color/textColor"
+                app:tvTagTextSize="14sp"
+                app:tvUseTagSeparator="true" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@color/white"
+                android:drawableLeft="@mipmap/icon"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical|left"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="drawable 居中显示"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBadgeLocal="drawable"
+                app:tvBadgeRadius="10dp"
+                app:tvBadgeStyle="number"
+                app:tvBadgeText="1"
+                app:tvBadgeTextColor="@color/white"
+                app:tvBadgeTextSize="12sp"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvDrawableCenter="true"
+                app:tvDrawableHeight="20dp"
+                app:tvDrawableWidth="20dp"
+                app:tvLineColor="@color/textColor"
+                app:tvUseTagSeparator="true" />
+
+            <com.hwy.textview.XTextView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="#80FF6600"
+                android:drawablePadding="3dp"
+                android:drawableTop="@mipmap/icon"
+                android:text="drawable 居中显示"
+                android:textColor="@color/textColor"
+                android:textSize="14sp"
+                app:tvBadgeLocal="drawable"
+                app:tvBadgeRadius="10dp"
+                app:tvBadgeStyle="number"
+                app:tvBadgeText="1"
+                app:tvBadgeTextColor="@color/white"
+                app:tvBadgeTextSize="12sp"
+                app:tvBottomLineMarginLeft="20dp"
+                app:tvDrawableCenter="true"
+                app:tvDrawableHeight="20dp"
+                app:tvDrawableWidth="20dp"
+                app:tvDrawableDirection="top"
+                app:tvLineColor="@color/textColor"
+                app:tvUseTagSeparator="true" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
-</LinearLayout>
+</ScrollView>

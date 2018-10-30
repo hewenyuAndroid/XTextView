@@ -266,9 +266,19 @@ public class XTextView extends TextView {
 
     // region ---------- drawable -------
 
+    private static final int DIRCTION_LEFT = 0;
+    private static final int DIRCTION_TOP = 1;
+    private static final int DIRCTION_RIGHT = 2;
+    private static final int DIRCTION_BOTTOM = 3;
+
     private int mDrawableWidth;
 
     private int mDrawableHeight;
+
+    /**
+     * 指定方向的Drawable，固定宽高
+     */
+    private int mDrawableDirection = DIRCTION_LEFT;
 
     /**
      * 设置了Drawable的资源是否居中
@@ -373,6 +383,7 @@ public class XTextView extends TextView {
         mDrawableHeight = array.getDimensionPixelSize(R.styleable.XTextView_tvDrawableHeight, 0);
         mDrawableWidth = array.getDimensionPixelSize(R.styleable.XTextView_tvDrawableWidth, 0);
         mDrawableCenter = array.getBoolean(R.styleable.XTextView_tvDrawableCenter, false);
+        mDrawableDirection = array.getInt(R.styleable.XTextView_tvDrawableDirection, DIRCTION_LEFT);
 
         // endregion ----------------------
         array.recycle();
@@ -604,8 +615,9 @@ public class XTextView extends TextView {
                 int drawableWidth = drawable.getIntrinsicWidth();
                 // 计算总内容的宽度
                 float bodyWidth = textWidth + drawablePadding + drawableWidth;
+
                 // 移动画布
-                canvas.translate((getWidth() - bodyWidth) / 2, 0);
+                canvas.translate((getWidth() - bodyWidth) / 2 - getPaddingLeft(), 0);
 
             } else if ((drawable = drawables[1]) != null) { // drawableRight
                 // 设置文本水平对齐
@@ -618,7 +630,7 @@ public class XTextView extends TextView {
                 int drawableHeight = drawable.getIntrinsicHeight();
                 // 计算总内容的高度
                 float bodyHeight = textHeight + drawablePadding + drawableHeight;
-                canvas.translate(0, (getHeight() - bodyHeight) / 2);
+                canvas.translate(0, (getHeight() - bodyHeight) / 2 - getPaddingTop());
             }
         }
     }
@@ -635,6 +647,7 @@ public class XTextView extends TextView {
 
         if (drawables[0] != null
                 && (drawables[0] instanceof BitmapDrawable)
+                && mDrawableDirection == DIRCTION_LEFT
                 && mDrawableWidth != 0
                 && mDrawableHeight != 0) {
 
@@ -645,6 +658,7 @@ public class XTextView extends TextView {
 
         if (drawables[1] != null
                 && (drawables[1] instanceof BitmapDrawable)
+                && mDrawableDirection == DIRCTION_TOP
                 && mDrawableWidth != 0
                 && mDrawableHeight != 0) {
 
@@ -655,6 +669,7 @@ public class XTextView extends TextView {
 
         if (drawables[2] != null
                 && (drawables[2] instanceof BitmapDrawable)
+                && mDrawableDirection == DIRCTION_RIGHT
                 && mDrawableWidth != 0
                 && mDrawableHeight != 0) {
 
@@ -665,6 +680,7 @@ public class XTextView extends TextView {
 
         if (drawables[3] != null
                 && (drawables[3] instanceof BitmapDrawable)
+                && mDrawableDirection == DIRCTION_BOTTOM
                 && mDrawableWidth != 0
                 && mDrawableHeight != 0) {
 
@@ -754,10 +770,10 @@ public class XTextView extends TextView {
             String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
 
             // tag位于左侧时的cx
-            cx = getPaddingLeft();
+            cx = getPaddingLeft() + getTextBound(tempTag, mTagPaint).width() + mBadgeRadius;
             Drawable dLeft = getCompoundDrawables()[0];
             if (dLeft != null) {
-                cx += dLeft.getIntrinsicWidth() + getCompoundDrawablePadding() + getTextBound(tempTag, mTagPaint).width() + mBadgeRadius;
+                cx += dLeft.getIntrinsicWidth() + getCompoundDrawablePadding();
             }
 
             if (mTagGravity == TAG_GRAVITY_LEFT_TOP) {  // 左上角
@@ -1327,6 +1343,11 @@ public class XTextView extends TextView {
         requestLayout();
     }
 
+    public void setDrawableDirection(DrawableDirection drawableDirection) {
+        this.mDrawableDirection = drawableDirection.getDirection();
+        requestLayout();
+    }
+
     // endregion -----------------------------------
 
 
@@ -1389,6 +1410,26 @@ public class XTextView extends TextView {
 
         public int getStyle() {
             return style;
+        }
+    }
+
+    /**
+     * Drawable指定方向固定大小
+     */
+    public enum DrawableDirection {
+        LEFT(DIRCTION_LEFT),
+        TOP(DIRCTION_TOP),
+        RIGHT(DIRCTION_RIGHT),
+        BOTTOM(DIRCTION_BOTTOM);
+
+        int direction;
+
+        DrawableDirection(int direction) {
+            this.direction = direction;
+        }
+
+        public int getDirection() {
+            return direction;
         }
     }
 
