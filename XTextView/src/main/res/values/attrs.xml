@@ -56,6 +56,52 @@
         <attr name="tvRightLineMarginTop" format="dimension|reference" />
         <attr name="tvRightLineMarginBottom" format="dimension|reference" />
 
+        <!-- TAG相关 -->
+        <attr name="tvTagText" format="string|reference" />
+        <attr name="tvTagTextColor" format="color|reference" />
+        <attr name="tvTagTextSize" format="dimension|reference" />
+        <attr name="tvTagGravity" format="enum">
+            <!-- 左上角 -->
+            <enum name="leftTop" value="0" />
+            <!-- 顶部居中 -->
+            <enum name="topHorizontal" value="1" />
+            <!-- 左侧垂直居中 -->
+            <enum name="leftVertical" value="2" />
+            <!-- 左下角 -->
+            <enum name="leftBottom" value="3" />
+        </attr>
+        <attr name="tvTagPadding" format="dimension|reference" />
+        <attr name="tvUseTagSeparator" format="boolean" />
+        <attr name="tvTagSeparator" format="string|reference" />
+
+        <!-- Badge相关 -->
+        <attr name="tvBadgeText" format="integer" />
+        <attr name="tvBadgeTextColor" format="color|reference" />
+        <attr name="tvBadgeTextSize" format="dimension|reference" />
+        <attr name="tvBadgeBgColor" format="color|reference" />
+        <attr name="tvBadgeRadius" format="dimension|reference" />
+        <!-- 显示红点还是带数字的徽章 -->
+        <attr name="tvBadgeStyle" format="enum">
+            <enum name="number" value="0" />
+            <enum name="dot" value="1" />
+        </attr>
+        <!-- 设置徽章显示的位置 -->
+        <attr name="tvBadgeLocal" format="enum">
+            <enum name="text" value="0" />
+            <enum name="tag" value="1" />
+            <enum name="drawable" value="2" />
+        </attr>
+        <!-- badge在X位置上的偏移量 -->
+        <attr name="tvBadgeOffsetX" format="dimension|reference" />
+        <!-- badge在Y位置上的偏移量 -->
+        <attr name="tvBadgeOffsetY" format="dimension|reference" />
+
+        <!-- 指定 Drawable 的宽高-->
+        <attr name="tvDrawableWidth" format="dimension|reference" />
+        <attr name="tvDrawableHeight" format="dimension|reference" />
+        <!-- 设置了 Drawable 后，显示的内容是否居中,left,top有效 -->
+        <attr name="tvDrawableCenter" format="boolean" />
+
     </declare-styleable>
 
 </resources>

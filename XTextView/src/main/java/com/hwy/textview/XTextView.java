@@ -1,19 +1,22 @@
 package com.hwy.textview;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.widget.TextView;
 
 /**
@@ -45,6 +48,11 @@ public class XTextView extends TextView {
     private static final int STATE_PRESS = 0;
 
     private static final int STATE_ENABLE = 1;
+
+    private static final int TAG_GRAVITY_LEFT_TOP = 0;
+    private static final int TAG_GRAVITY_TOP_HORIZONTAL = 1;
+    private static final int TAG_GRAVITY_LEFT_VERTICAL = 2;
+    private static final int TAG_GRAVITY_LEFT_BOTTOM = 3;
 
     // endregion ------------------------
 
@@ -173,8 +181,102 @@ public class XTextView extends TextView {
     private int mRightLineMarginTop = 0;
     private int mRightLineMarginBottom = 0;
 
+    // endregion -----------------------
+
+    // region ---------- 标签 -----------
+
+    private Paint mTagPaint;
+
+    private String mTagText = "";
+    private int mTagTextColor = Color.TRANSPARENT;
+    private int mTagTextSize = 0;
+
+    private int mTagGravity = TAG_GRAVITY_LEFT_TOP;
+
+    private boolean useTagSeparator = false;
+
+    private String mTagSeparator = ":";
+
+    private int mTagPadding = 0;
+
+    /**
+     * tag 文本的长/高 + tagPadding，加到padding的值里面
+     */
+    private int mTagTextLength;
+
 
     // endregion -----------------------
+
+    // region ---------- 徽章 -----------
+
+    private static final int BADGE_NUMBER = 0;
+
+    private static final int BADGE_DOT = 1;
+
+    private static final int LOCAL_TEXT = 0;
+
+    private static final int LOCAL_TAG = 1;
+
+    private static final int LOCAL_DRAWABLE = 2;
+
+    private Paint mBadgePaint;
+
+    /**
+     * 徽章的文本内容
+     */
+    private int mBadgeText = 0;
+
+    /**
+     * 徽章的文本大小
+     */
+    private int mBadgeTextSize = 0;
+
+    /**
+     * 徽章的文本颜色
+     */
+    private int mBadgeTextColor = Color.WHITE;
+
+    /**
+     * 徽章的背景颜色
+     */
+    private int mBadgeBgColor = Color.RED;
+
+    /**
+     * 圆形的半径
+     */
+    private int mBadgeRadius = 0;
+
+    /**
+     * 徽章四周的间距
+     */
+    private int mBadgeOffsetX = 0;
+    private int mBadgeOffsetY = 0;
+
+    /**
+     * 徽章显示的风格
+     */
+    private int mBadgeStyle = BADGE_NUMBER;
+
+    /**
+     * 徽章显示的位置
+     */
+    private int mBadgeLocal = LOCAL_TEXT;
+
+    // endregion -----------------------
+
+    // region ---------- drawable -------
+
+    private int mDrawableWidth;
+
+    private int mDrawableHeight;
+
+    /**
+     * 设置了Drawable的资源是否居中
+     */
+    private boolean mDrawableCenter = false;
+
+    // endregion -----------------------
+
 
     public XTextView(Context context) {
         this(context, null);
@@ -238,10 +340,41 @@ public class XTextView extends TextView {
         mRightLineMarginBottom = array.getDimensionPixelSize(R.styleable.XTextView_tvRightLineMarginBottom, 0);
         // endregion ----------------------
 
-        // region --------- 名称 ----------
+        // region --------- 标签 ----------
+        mTagText = array.getString(R.styleable.XTextView_tvTagText);
+        mTagTextColor = array.getColor(R.styleable.XTextView_tvTagTextColor, Color.GRAY);
+        mTagTextSize = array.getDimensionPixelSize(R.styleable.XTextView_tvTagTextSize, 0);
+        mTagSeparator = array.getString(R.styleable.XTextView_tvTagSeparator);
+        if (TextUtils.isEmpty(mTagSeparator)) {
+            mTagSeparator = ":";
+        }
+        useTagSeparator = array.getBoolean(R.styleable.XTextView_tvUseTagSeparator, false);
+        mTagPadding = array.getDimensionPixelSize(R.styleable.XTextView_tvTagPadding, 0);
+        mTagGravity = array.getInt(R.styleable.XTextView_tvTagGravity, TAG_GRAVITY_LEFT_TOP);
 
         // endregion ----------------------
 
+        // region --------- 徽章 ----------
+
+        mBadgeText = array.getInt(R.styleable.XTextView_tvBadgeText, 0);
+        mBadgeTextColor = array.getColor(R.styleable.XTextView_tvBadgeTextColor, Color.WHITE);
+        mBadgeTextSize = array.getDimensionPixelSize(R.styleable.XTextView_tvBadgeTextSize, 10);
+        mBadgeBgColor = array.getColor(R.styleable.XTextView_tvBadgeBgColor, Color.RED);
+        mBadgeRadius = array.getDimensionPixelSize(R.styleable.XTextView_tvBadgeRadius, 20);
+        mBadgeStyle = array.getInt(R.styleable.XTextView_tvBadgeStyle, BADGE_NUMBER);
+        mBadgeLocal = array.getInt(R.styleable.XTextView_tvBadgeLocal, LOCAL_TEXT);
+        mBadgeOffsetX = array.getDimensionPixelSize(R.styleable.XTextView_tvBadgeOffsetX, 0);
+        mBadgeOffsetY = array.getDimensionPixelSize(R.styleable.XTextView_tvBadgeOffsetY, 0);
+
+        // endregion ----------------------
+
+        // region --------- drawable --------
+
+        mDrawableHeight = array.getDimensionPixelSize(R.styleable.XTextView_tvDrawableHeight, 0);
+        mDrawableWidth = array.getDimensionPixelSize(R.styleable.XTextView_tvDrawableWidth, 0);
+        mDrawableCenter = array.getBoolean(R.styleable.XTextView_tvDrawableCenter, false);
+
+        // endregion ----------------------
         array.recycle();
 
         init();
@@ -256,16 +389,34 @@ public class XTextView extends TextView {
         mLinePaint.setColor(mLineColor);
         mLineRect = new Rect();
 
+        mTagPaint = new Paint();
+        mTagPaint.setColor(mTagTextColor);
+        mTagPaint.setTextSize(mTagTextSize);
+        mTagPaint.setStyle(Paint.Style.FILL);
+        mTagPaint.setDither(true);
+        mTagPaint.setAntiAlias(true);
+
+        mBadgePaint = new Paint();
+        mBadgePaint.setAntiAlias(true);
+        mBadgePaint.setDither(true);
+        mBadgePaint.setStyle(Paint.Style.FILL);
+        mBadgePaint.setTextSize(mBadgeTextSize);
+        mBadgePaint.setTextAlign(Paint.Align.CENTER);
+
+        mTagPaint = new Paint();
+        mTagPaint.setDither(true);
+        mTagPaint.setAntiAlias(true);
+        mTagPaint.setTextSize(mTagTextSize);
+        mTagPaint.setColor(mTagTextColor);
+
         // 更新背景
         updateBackground();
-
     }
 
 
     /**
      * 更新背景
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void updateBackground() {
 
         // 初始化背景
@@ -277,7 +428,9 @@ public class XTextView extends TextView {
             } else {
                 mNormalBackground.setColor(Color.TRANSPARENT);
             }
-            setBackground(mNormalBackground);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                setBackground(mNormalBackground);
+            }
         }
 
         // 设置形状
@@ -406,15 +559,375 @@ public class XTextView extends TextView {
         mNormalBackground.setCornerRadii(mCornerRadii);
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        createFixedSizeDrawable();
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
+
+        drawableToCenter(canvas);
+
         super.onDraw(canvas);
 
         // 绘制四周线条
         drawLines(canvas);
+        // 绘制Tag
+        drawTagText(canvas);
+        // 绘制Badge
+        drawBadge(canvas);
 
     }
+
+    /**
+     * 带Drawable的内容是否居中显示
+     *
+     * @param canvas
+     */
+    private void drawableToCenter(Canvas canvas) {
+
+        if (!mDrawableCenter) {
+            return;
+        }
+
+        Drawable[] drawables = getCompoundDrawables();
+        if (drawables != null) {
+            Drawable drawable;
+            if ((drawable = drawables[0]) != null) { // drawableLeft
+                // 设置文本垂直对齐
+                setGravity(Gravity.CENTER_VERTICAL);
+                // 左边的 Drawable 不为空时，计算需要绘制的内容的宽度
+                float textWidth = getPaint().measureText(getText().toString());
+                int drawablePadding = getCompoundDrawablePadding();
+                int drawableWidth = drawable.getIntrinsicWidth();
+                // 计算总内容的宽度
+                float bodyWidth = textWidth + drawablePadding + drawableWidth;
+                // 移动画布
+                canvas.translate((getWidth() - bodyWidth) / 2, 0);
+
+            } else if ((drawable = drawables[1]) != null) { // drawableRight
+                // 设置文本水平对齐
+                setGravity(Gravity.CENTER_HORIZONTAL);
+                // 上面的drawable 不为空时，计算需要绘制的内容的高度
+                Rect rect = new Rect();
+                getPaint().getTextBounds(getText().toString(), 0, getText().toString().length(), rect);
+                int textHeight = rect.height();
+                int drawablePadding = getCompoundDrawablePadding();
+                int drawableHeight = drawable.getIntrinsicHeight();
+                // 计算总内容的高度
+                float bodyHeight = textHeight + drawablePadding + drawableHeight;
+                canvas.translate(0, (getHeight() - bodyHeight) / 2);
+            }
+        }
+    }
+
+    /**
+     * 绘制指定大小的Drawable
+     */
+    private void createFixedSizeDrawable() {
+
+        Drawable[] drawables = getCompoundDrawables();
+
+        Bitmap bitmap = null;
+        Drawable drawable = null;
+
+        if (drawables[0] != null
+                && (drawables[0] instanceof BitmapDrawable)
+                && mDrawableWidth != 0
+                && mDrawableHeight != 0) {
+
+            bitmap = ((BitmapDrawable) drawables[0]).getBitmap();
+            drawable = new BitmapDrawable(getResources(), getBitmap(bitmap, mDrawableWidth, mDrawableHeight));
+            setCompoundDrawablesWithIntrinsicBounds(drawable, drawables[1], drawables[2], drawables[3]);
+        }
+
+        if (drawables[1] != null
+                && (drawables[1] instanceof BitmapDrawable)
+                && mDrawableWidth != 0
+                && mDrawableHeight != 0) {
+
+            bitmap = ((BitmapDrawable) drawables[1]).getBitmap();
+            drawable = new BitmapDrawable(getResources(), getBitmap(bitmap, mDrawableWidth, mDrawableHeight));
+            setCompoundDrawablesWithIntrinsicBounds(drawables[0], drawable, drawables[2], drawables[3]);
+        }
+
+        if (drawables[2] != null
+                && (drawables[2] instanceof BitmapDrawable)
+                && mDrawableWidth != 0
+                && mDrawableHeight != 0) {
+
+            bitmap = ((BitmapDrawable) drawables[2]).getBitmap();
+            drawable = new BitmapDrawable(getResources(), getBitmap(bitmap, mDrawableWidth, mDrawableHeight));
+            setCompoundDrawablesWithIntrinsicBounds(drawables[0], drawables[1], drawable, drawables[3]);
+        }
+
+        if (drawables[3] != null
+                && (drawables[3] instanceof BitmapDrawable)
+                && mDrawableWidth != 0
+                && mDrawableHeight != 0) {
+
+            bitmap = ((BitmapDrawable) drawables[3]).getBitmap();
+            drawable = new BitmapDrawable(getResources(), getBitmap(bitmap, mDrawableWidth, mDrawableHeight));
+            setCompoundDrawablesWithIntrinsicBounds(drawables[0], drawables[1], drawables[2], drawable);
+        }
+
+        drawable = null;
+        bitmap = null;
+
+    }
+
+    /**
+     * 缩放图片
+     *
+     * @param bm
+     * @param newWidth
+     * @param newHeight
+     * @return
+     */
+    public Bitmap getBitmap(Bitmap bm, int newWidth, int newHeight) {
+        // 获得图片的宽高
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        // 计算缩放比例
+        float scaleWidth = (float) newWidth / width;
+        float scaleHeight = (float) newHeight / height;
+        // 取得想要缩放的matrix参数
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        // 得到新的图片
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+    }
+
+    /**
+     * 绘制徽章
+     *
+     * @param canvas
+     */
+    private void drawBadge(Canvas canvas) {
+
+        if (mBadgeText <= 0) {
+            return;
+        }
+
+        int cx = 0;
+        int cy = 0;
+
+        mBadgePaint.setColor(mBadgeBgColor);
+
+        if (mBadgeLocal == LOCAL_TEXT) {
+            if (TextUtils.isEmpty(getText())) {
+                return;
+            }
+
+            if ((getGravity() & Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK) == Gravity.RIGHT) {    // 设置了右对齐
+
+                cx = getPaddingRight() - mBadgeRadius;
+
+                Drawable dRight = getCompoundDrawables()[2];
+                if (dRight != null) {
+                    cx += dRight.getIntrinsicWidth() + getCompoundDrawablePadding();
+                }
+
+                cx = getMeasuredWidth() - cx;
+
+            } else {    // 左对齐
+                cx = getPaddingLeft() + getTextBound(getText().toString(), getPaint()).width() + mBadgeRadius;
+                Drawable dLeft = getCompoundDrawables()[0];
+                if (dLeft != null) {
+                    cx += dLeft.getIntrinsicWidth() + getCompoundDrawablePadding();
+                }
+                if (getTagText().length() > 0) {
+                    String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
+                    cx += getTextBound(tempTag, mTagPaint).width() + getTagPadding();
+                }
+            }
+
+            cy = getBaseline() - getLineHeight() * 2 / 3;
+
+        } else if (mBadgeLocal == LOCAL_TAG) {
+            if (getTagText().length() < 1) {
+                return;
+            }
+
+            String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
+
+            // tag位于左侧时的cx
+            cx = getPaddingLeft();
+            Drawable dLeft = getCompoundDrawables()[0];
+            if (dLeft != null) {
+                cx += dLeft.getIntrinsicWidth() + getCompoundDrawablePadding() + getTextBound(tempTag, mTagPaint).width() + mBadgeRadius;
+            }
+
+            if (mTagGravity == TAG_GRAVITY_LEFT_TOP) {  // 左上角
+                cy = getBaseline() - getLineHeight() * 2 / 3;
+            } else if (mTagGravity == TAG_GRAVITY_LEFT_VERTICAL) {  // 左侧垂直居中
+                cy = (int) (getBaseline() + ((getLineCount() - 1) / 2f) * getLineHeight()) - getLineHeight() * 2 / 3;
+            } else if (mTagGravity == TAG_GRAVITY_LEFT_BOTTOM) {  // 左右底部
+                cy = getBaseline() + (getLineCount() - 1) * getLineHeight() - getLineHeight() * 2 / 3;
+            } else { // 顶部水平居中等不绘制
+                return;
+            }
+
+        } else if (mBadgeLocal == LOCAL_DRAWABLE) {
+
+            Drawable[] drawables = getCompoundDrawables();
+            if (drawables[0] == null && drawables[1] == null) { // 只绘制左侧和顶部
+                return;
+            }
+
+            if (drawables[0] != null) {
+                int w = mDrawableWidth != 0 ? mDrawableWidth : drawables[0].getIntrinsicWidth();
+                int h = mDrawableHeight != 0 ? mDrawableHeight : drawables[0].getIntrinsicHeight();
+                cx = getPaddingLeft() + w;
+                cy = getPaddingTop() + (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 2 - h / 2;
+            } else if (drawables[1] != null) {
+                int w = mDrawableWidth != 0 ? mDrawableWidth : drawables[1].getIntrinsicWidth();
+                int h = mDrawableHeight != 0 ? mDrawableHeight : drawables[1].getIntrinsicHeight();
+                cx = getCompoundPaddingLeft() + (getMeasuredWidth() - getCompoundPaddingLeft() - getPaddingRight()) / 2 + w / 2;
+                cy = getPaddingTop();
+            } else {
+                // 右侧/底部的不绘制
+                return;
+            }
+
+        }
+
+        // 增加 X、Y的偏移量
+        cx += mBadgeOffsetX;
+        cy += mBadgeOffsetY;
+
+        canvas.drawCircle(cx, cy, mBadgeRadius, mBadgePaint);
+
+        /**
+         * 绘制文本
+         */
+        if (mBadgeStyle == BADGE_NUMBER) {
+            mBadgePaint.setColor(mBadgeTextColor);
+            String tempBadge = mBadgeText + "";
+            int baseLine = cy + getPaintBaseLine(mBadgePaint);
+
+            canvas.drawText(tempBadge, cx, baseLine, mBadgePaint);
+        }
+
+    }
+
+    /**
+     * 获取Paint基线
+     *
+     * @param paint
+     * @return
+     */
+    private int getPaintBaseLine(Paint paint) {
+        Paint.FontMetrics metrics = paint.getFontMetrics();
+        return (int) Math.abs(metrics.descent + metrics.ascent) / 2;
+    }
+
+    /**
+     * 绘制Tag
+     *
+     * @param canvas
+     */
+    private void drawTagText(Canvas canvas) {
+
+        if (TextUtils.isEmpty(mTagText)) {
+            return;
+        }
+
+        String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
+
+        if (mTagGravity == TAG_GRAVITY_LEFT_TOP
+                || mTagGravity == TAG_GRAVITY_LEFT_VERTICAL
+                || mTagGravity == TAG_GRAVITY_LEFT_BOTTOM) {
+            mTagPaint.setTextAlign(Paint.Align.LEFT);
+            // 左侧
+            Drawable dLeft = getCompoundDrawables()[0];
+            int startX = getPaddingLeft();
+            if (dLeft != null) {
+                startX += dLeft.getIntrinsicWidth() + getCompoundDrawablePadding();
+            }
+
+            int baseLine = 0;
+
+            if (mTagGravity == TAG_GRAVITY_LEFT_TOP || getLineCount() == 1) {
+                baseLine = getBaseline();
+            } else if (mTagGravity == TAG_GRAVITY_LEFT_VERTICAL) {
+                baseLine = (int) (getBaseline() + ((getLineCount() - 1) / 2f) * getLineHeight());
+            } else if (mTagGravity == TAG_GRAVITY_LEFT_BOTTOM) {
+                baseLine = getBaseline() + (getLineCount() - 1) * getLineHeight();
+            }
+
+            canvas.drawText(tempTag, startX, baseLine, mTagPaint);
+
+        } else if (mTagGravity == TAG_GRAVITY_TOP_HORIZONTAL) {
+            // 顶部
+            mTagPaint.setTextAlign(Paint.Align.CENTER);
+
+            int startX = 0;
+
+            int w = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+
+            Drawable dRight = getCompoundDrawables()[2];
+            if (dRight != null) {
+                w = w - dRight.getIntrinsicWidth() - getCompoundDrawablePadding();
+            }
+
+            Drawable dLeft = getCompoundDrawables()[0];
+            if (dLeft != null) {
+                w = w - dLeft.getIntrinsicWidth() - getCompoundDrawablePadding();
+                startX = getPaddingLeft() + dLeft.getIntrinsicWidth() + getCompoundDrawablePadding() + w / 2;
+            } else {
+                startX = getPaddingLeft() + w / 2;
+            }
+
+            int baseLine = getPaddingTop();
+            Drawable dTop = getCompoundDrawables()[1];
+            if (dTop != null) {
+                baseLine += dTop.getIntrinsicHeight() + getCompoundDrawablePadding();
+            }
+
+            baseLine += getTextBound(tempTag, mTagPaint).height();
+            canvas.drawText(tempTag, startX, baseLine, mTagPaint);
+        }
+
+    }
+
+    // 增加顶部Tag的间距
+    @Override
+    public int getExtendedPaddingTop() {
+        if (!TextUtils.isEmpty(mTagText) && mTagGravity == TAG_GRAVITY_TOP_HORIZONTAL) {
+
+            String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
+            mTagTextLength = getTextBound(tempTag, mTagPaint).height() + mTagPadding;
+
+        } else {
+            mTagTextLength = 0;
+        }
+
+
+        return super.getExtendedPaddingTop() + mTagTextLength;
+    }
+
+
+    // 增加左侧Tag的间距
+    @Override
+    public int getCompoundPaddingLeft() {
+        if (!TextUtils.isEmpty(mTagText)
+                && (mTagGravity == TAG_GRAVITY_LEFT_TOP
+                || mTagGravity == TAG_GRAVITY_LEFT_VERTICAL
+                || mTagGravity == TAG_GRAVITY_LEFT_BOTTOM)) {
+
+            String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
+            mTagTextLength = getTextBound(tempTag, mTagPaint).width() + mTagPadding;
+
+        } else {
+            mTagTextLength = 0;
+        }
+
+        return super.getCompoundPaddingLeft() + mTagTextLength;
+    }
+
 
     /**
      * 绘制四周的线条
@@ -474,6 +987,27 @@ public class XTextView extends TextView {
             text = "";
         }
         super.setText(text, type);
+    }
+
+    /**
+     * 获取字体的边框
+     *
+     * @param text
+     * @param paint
+     * @return
+     */
+    public Rect getTextBound(String text, Paint paint) {
+        Rect rect = new Rect();
+        if (!TextUtils.isEmpty(text)) {
+            paint.getTextBounds(text, 0, text.length(), rect);
+        }
+        return rect;
+    }
+
+    @Override
+    public void setCompoundDrawables(Drawable left, Drawable top, Drawable right, Drawable bottom) {
+        super.setCompoundDrawables(left, top, right, bottom);
+        requestLayout();
     }
 
     // region --------------- get/set -------------------
@@ -605,6 +1139,259 @@ public class XTextView extends TextView {
         setBorder();
     }
 
+    /**
+     * 设置tag
+     *
+     * @param tagText
+     */
+    public void setTagText(CharSequence tagText) {
+        if (TextUtils.isEmpty(tagText)) {
+            tagText = "";
+        }
+        this.mTagText = tagText.toString();
+        invalidate();
+    }
+
+    public String getTagText() {
+        if (TextUtils.isEmpty(mTagText)) {
+            mTagText = "";
+        }
+        return this.mTagText;
+    }
+
+    /**
+     * 设置Tag文本的大小
+     *
+     * @param tagTextSize
+     */
+    public void setTagTextSize(int tagTextSize) {
+        if (tagTextSize < 0) {
+            tagTextSize = 0;
+        }
+        this.mTagTextSize = tagTextSize;
+        mTagPaint.setTextSize(mTagTextSize);
+        invalidate();
+    }
+
+    public int getTagTextSize() {
+        return this.mTagTextSize;
+    }
+
+    /**
+     * 设置Tag文本的颜色
+     *
+     * @param tagTextColor
+     */
+    public void setTagTextColor(int tagTextColor) {
+        this.mTagTextColor = tagTextColor;
+        invalidate();
+    }
+
+    public int getTagTextColor() {
+        return this.mTagTextColor;
+    }
+
+    /**
+     * 设置Tag的分隔符
+     *
+     * @param tagSeparator
+     */
+    public void setTagSeparator(CharSequence tagSeparator) {
+        if (TextUtils.isEmpty(tagSeparator)) {
+            tagSeparator = ":";
+        }
+        this.mTagSeparator = tagSeparator.toString();
+        invalidate();
+    }
+
+    public String getTagSeparator() {
+        return this.mTagSeparator;
+    }
+
+    /**
+     * 是否使用Tag分隔符
+     *
+     * @param useTagSeparator
+     */
+    public void setUseTagSeparator(boolean useTagSeparator) {
+        this.useTagSeparator = useTagSeparator;
+        invalidate();
+    }
+
+    /**
+     * 设置Tag与文本之间的间距
+     *
+     * @param tagPadding
+     */
+    public void setTagPadding(int tagPadding) {
+        this.mTagPadding = tagPadding;
+        invalidate();
+    }
+
+    public int getTagPadding() {
+        return this.mTagPadding;
+    }
+
+    /**
+     * 设置Tag的位置
+     *
+     * @param gravity
+     */
+    public void setTagGravity(TagGravity gravity) {
+        this.mTagGravity = gravity.getGravity();
+        invalidate();
+    }
+
+    /**
+     * 设置Badge
+     *
+     * @param count
+     */
+    public void setBadgeText(int count) {
+        this.mBadgeText = count;
+        invalidate();
+    }
+
+    public int getBadgeText() {
+        return mBadgeText;
+    }
+
+    public void setBadgeTextColor(int badgeTextColor) {
+        this.mBadgeTextColor = badgeTextColor;
+        invalidate();
+    }
+
+    public int getBadgeTextColor() {
+        return mBadgeTextColor;
+    }
+
+    public void setBadgeTextSize(int badgeTextSize) {
+        this.mBadgeTextSize = badgeTextSize;
+        mBadgePaint.setTextSize(mBadgeTextSize);
+        invalidate();
+    }
+
+    public int getBadgeTextSize() {
+        return this.mBadgeTextSize;
+    }
+
+    public void setBadgeOffsetX(int offsetX) {
+        this.mBadgeOffsetX = offsetX;
+        invalidate();
+    }
+
+    public int getBadgeOffsetX() {
+        return mBadgeOffsetX;
+    }
+
+    public void setBadgeOffsetY(int offsetY) {
+        this.mBadgeOffsetY = offsetY;
+        invalidate();
+    }
+
+    public int getBadgeOffsetY() {
+        return mBadgeOffsetY;
+    }
+
+    public void setBadgeRadius(int radius) {
+        this.mBadgeRadius = radius;
+        invalidate();
+    }
+
+    public int getBadgeRadius() {
+        return this.mBadgeRadius;
+    }
+
+    public void setBadgeBgColor(int badgeBgColor) {
+        this.mBadgeBgColor = badgeBgColor;
+        invalidate();
+    }
+
+    public int getBadgeBgColor() {
+        return this.mBadgeBgColor;
+    }
+
+    public void setBadgeLocal(BadgeLocal local) {
+        this.mBadgeLocal = local.getLocal();
+        invalidate();
+    }
+
+    public void setBadgeStyle(BadgeStyle style) {
+        this.mBadgeStyle = style.getStyle();
+        invalidate();
+    }
+
+    public void setDrawableSize(int drawableWidth, int drawableHeight) {
+        this.mDrawableWidth = drawableWidth;
+        this.mDrawableHeight = drawableHeight;
+        requestLayout();
+    }
+
     // endregion -----------------------------------
+
+
+    // region ------------ enum ---------------
+
+    /**
+     * Tag显示的位置
+     */
+    public enum TagGravity {
+
+        LEFT_TOP(XTextView.TAG_GRAVITY_LEFT_TOP),
+        TOP_HORIZONTAL(XTextView.TAG_GRAVITY_TOP_HORIZONTAL),
+        LEFT_VERTICAL(XTextView.TAG_GRAVITY_LEFT_VERTICAL),
+        LEFT_BOTTOM(XTextView.TAG_GRAVITY_LEFT_BOTTOM);
+
+        int gravity;
+
+        TagGravity(int gravity) {
+            this.gravity = gravity;
+        }
+
+        public int getGravity() {
+            return this.gravity;
+        }
+
+    }
+
+
+    /**
+     * 徽章绘制的位置
+     */
+    public enum BadgeLocal {
+        LEFT(LOCAL_TEXT),
+        TAG(LOCAL_TAG),
+        DRAWABLE(LOCAL_DRAWABLE);
+
+        int local;
+
+        BadgeLocal(int local) {
+            this.local = local;
+        }
+
+        public int getLocal() {
+            return local;
+        }
+    }
+
+    /**
+     * 徽章绘制的风格
+     */
+    public enum BadgeStyle {
+        NUMBER(BADGE_NUMBER),
+        DOT(BADGE_DOT);
+
+        int style;
+
+        BadgeStyle(int style) {
+            this.style = style;
+        }
+
+        public int getStyle() {
+            return style;
+        }
+    }
+
+    // endregion -----------------------
 
 }

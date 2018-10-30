@@ -15,6 +15,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tv = findViewById(R.id.tv);
+        tv.setDrawableSize(60, 60);
+        tv.setBadgeStyle(XTextView.BadgeStyle.NUMBER);
+        tv.setBadgeRadius(20);
+
 
     }
 
