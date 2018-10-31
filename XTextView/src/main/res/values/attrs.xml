@@ -1,6 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- 圆角 -->
+    <attr name="tvCorner" format="dimension|reference" />
+    <attr name="tvCornerLeftTop" format="dimension|reference" />
+    <attr name="tvCornerRightTop" format="dimension|reference" />
+    <attr name="tvCornerRightBottom" format="dimension|reference" />
+    <attr name="tvCornerLeftBottom" format="dimension|reference" />
+    <!-- 边框 -->
+    <attr name="tvBorderSize" format="dimension|reference" />
+    <attr name="tvBorderColor" format="color|reference" />
+    <!-- 底部的分隔线 -->
+    <attr name="tvLineColor" format="color|reference" />
+    <attr name="tvBottomLineSize" format="dimension|reference" />
+    <attr name="tvBottomLineMarginLeft" format="dimension|reference" />
+    <attr name="tvBottomLineMarginRight" format="dimension|reference" />
+    <!-- Tag -->
+    <attr name="tvTagText" format="string|reference" />
+    <attr name="tvTagTextColor" format="color|reference" />
+    <attr name="tvTagTextSize" format="dimension|reference" />
+    <attr name="tvTagPadding" format="dimension|reference" />
+    <attr name="tvUseTagSeparator" format="boolean" />
+    <attr name="tvTagSeparator" format="string|reference" />
+    <!-- 指定 Drawable 的宽高-->
+    <attr name="tvDrawableWidth" format="dimension|reference" />
+    <attr name="tvDrawableHeight" format="dimension|reference" />
+    <!-- 指定宽高作用的方向 -->
+    <attr name="tvDrawableDirection" format="enum">
+        <enum name="left" value="0" />
+        <enum name="top" value="1" />
+        <enum name="right" value="2" />
+        <enum name="bottom" value="3" />
+    </attr>
+    <!-- 设置了 Drawable 后，显示的内容是否居中,left,top有效 -->
+    <attr name="tvDrawableCenter" format="boolean" />
+
+
+    <declare-styleable name="XEditText">
+        <!-- 圆角 -->
+        <attr name="tvCorner" />
+        <attr name="tvCornerLeftTop" />
+        <attr name="tvCornerRightTop" />
+        <attr name="tvCornerRightBottom" />
+        <attr name="tvCornerLeftBottom" />
+        <!-- 边框 -->
+        <attr name="tvBorderSize" />
+        <attr name="tvBorderColor" />
+        <!-- 底部的分隔线 -->
+        <attr name="tvLineColor" />
+        <attr name="tvBottomLineSize" />
+        <attr name="tvBottomLineMarginLeft" />
+        <attr name="tvBottomLineMarginRight" />
+        <!-- TAG相关 -->
+        <attr name="tvTagText" />
+        <attr name="tvTagTextColor" />
+        <attr name="tvTagTextSize" />
+        <attr name="tvTagPadding" />
+        <attr name="tvUseTagSeparator" />
+        <attr name="tvTagSeparator" />
+        <!-- 分隔线 -->
+        <attr name="tvSeparatorWidth" format="dimension|reference" />
+        <attr name="tvSeparatorHeight" format="dimension|reference" />
+        <attr name="tvSeparatorColor" format="color|reference" />
+        <attr name="tvSeparatorPadding" format="dimension|reference" />
+        <!-- 清除按钮 -->
+        <attr name="tvUseCross" format="boolean" />
+        <attr name="tvCrossBgColor" format="color|reference" />
+        <attr name="tvCrossRadius" format="dimension|reference" />
+        <attr name="tvCrossColor" format="color|reference" />
+        <attr name="tvCrossLength" format="dimension|reference" />
+        <attr name="tvCrossSize" format="dimension|reference" />
+        <attr name="tvCrossPadding" format="dimension|reference" />
+        <!-- 指定 Drawable 的宽高-->
+        <attr name="tvDrawableWidth" />
+        <attr name="tvDrawableHeight" />
+        <!-- 指定宽高作用的方向 -->
+        <attr name="tvDrawableDirection" />
+    </declare-styleable>
+
     <declare-styleable name="XTextView">
         <!-- 形状 -->
         <attr name="tvShape" format="enum">
@@ -8,14 +85,14 @@
             <enum name="circle" value="1" />
         </attr>
         <!-- 圆角 -->
-        <attr name="tvCorner" format="dimension|reference" />
-        <attr name="tvCornerLeftTop" format="dimension|reference" />
-        <attr name="tvCornerRightTop" format="dimension|reference" />
-        <attr name="tvCornerRightBottom" format="dimension|reference" />
-        <attr name="tvCornerLeftBottom" format="dimension|reference" />
+        <attr name="tvCorner" />
+        <attr name="tvCornerLeftTop" />
+        <attr name="tvCornerRightTop" />
+        <attr name="tvCornerRightBottom" />
+        <attr name="tvCornerLeftBottom" />
         <!-- 边框 -->
-        <attr name="tvBorderSize" format="dimension|reference" />
-        <attr name="tvBorderColor" format="color|reference" />
+        <attr name="tvBorderSize" />
+        <attr name="tvBorderColor" />
         <!-- 边框，虚线时线段的长度 -->
         <attr name="tvBorderDashWidth" format="dimension|reference" />
         <!-- 边框，虚线时线段之间的距离 -->
@@ -42,10 +119,10 @@
         <attr name="tvStateBorderColorValid" format="color|reference" />
 
         <!-- 底部的分隔线 -->
-        <attr name="tvLineColor" format="color|reference" />
-        <attr name="tvBottomLineSize" format="dimension|reference" />
-        <attr name="tvBottomLineMarginLeft" format="dimension|reference" />
-        <attr name="tvBottomLineMarginRight" format="dimension|reference" />
+        <attr name="tvLineColor" />
+        <attr name="tvBottomLineSize" />
+        <attr name="tvBottomLineMarginLeft" />
+        <attr name="tvBottomLineMarginRight" />
         <attr name="tvTopLineSize" format="dimension|reference" />
         <attr name="tvTopLineMarginLeft" format="dimension|reference" />
         <attr name="tvTopLineMarginRight" format="dimension|reference" />
@@ -57,9 +134,9 @@
         <attr name="tvRightLineMarginBottom" format="dimension|reference" />
 
         <!-- TAG相关 -->
-        <attr name="tvTagText" format="string|reference" />
-        <attr name="tvTagTextColor" format="color|reference" />
-        <attr name="tvTagTextSize" format="dimension|reference" />
+        <attr name="tvTagText" />
+        <attr name="tvTagTextColor" />
+        <attr name="tvTagTextSize" />
         <attr name="tvTagGravity" format="enum">
             <!-- 左上角 -->
             <enum name="leftTop" value="0" />
@@ -70,9 +147,9 @@
             <!-- 左下角 -->
             <enum name="leftBottom" value="3" />
         </attr>
-        <attr name="tvTagPadding" format="dimension|reference" />
-        <attr name="tvUseTagSeparator" format="boolean" />
-        <attr name="tvTagSeparator" format="string|reference" />
+        <attr name="tvTagPadding" />
+        <attr name="tvUseTagSeparator" />
+        <attr name="tvTagSeparator" />
 
         <!-- Badge相关 -->
         <attr name="tvBadgeText" format="integer" />
@@ -97,17 +174,12 @@
         <attr name="tvBadgeOffsetY" format="dimension|reference" />
 
         <!-- 指定 Drawable 的宽高-->
-        <attr name="tvDrawableWidth" format="dimension|reference" />
-        <attr name="tvDrawableHeight" format="dimension|reference" />
+        <attr name="tvDrawableWidth" />
+        <attr name="tvDrawableHeight" />
         <!-- 指定宽高作用的方向 -->
-        <attr name="tvDrawableDirection" format="enum">
-            <enum name="left" value="0" />
-            <enum name="top" value="1" />
-            <enum name="right" value="2" />
-            <enum name="bottom" value="3" />
-        </attr>
+        <attr name="tvDrawableDirection" />
         <!-- 设置了 Drawable 后，显示的内容是否居中,left,top有效 -->
-        <attr name="tvDrawableCenter" format="boolean" />
+        <attr name="tvDrawableCenter" />
 
     </declare-styleable>
 

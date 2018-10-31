@@ -17,7 +17,10 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.widget.TextView;
+
+import com.hwy.textview.listener.OnDrawableClickListener;
 
 /**
  * 作者: hewenyu
@@ -75,27 +78,27 @@ public class XTextView extends TextView {
      * 四周的圆角（方形时有效）
      * 如果同时设置了下面四个的值，那么对应位置的圆角值就会被单独设置值的覆盖
      */
-    private int mCorner = 0;
+    private float mCorner = 0;
 
     /**
      * 左上角
      */
-    private int mCornerLeftTop = INVALIDATE_CORNER_VALUE;
+    private float mCornerLeftTop = INVALIDATE_CORNER_VALUE;
 
     /**
      * 右上角
      */
-    private int mCornerRightTop = INVALIDATE_CORNER_VALUE;
+    private float mCornerRightTop = INVALIDATE_CORNER_VALUE;
 
     /**
      * 右下角
      */
-    private int mCornerRightBottom = INVALIDATE_CORNER_VALUE;
+    private float mCornerRightBottom = INVALIDATE_CORNER_VALUE;
 
     /**
      * 左下角
      */
-    private int mCornerLeftBottom = INVALIDATE_CORNER_VALUE;
+    private float mCornerLeftBottom = INVALIDATE_CORNER_VALUE;
 
     // 四个圆角的半径,左上角开始顺时针方向，每两个值标示一个圆角
     private float[] mCornerRadii = new float[8];
@@ -266,10 +269,10 @@ public class XTextView extends TextView {
 
     // region ---------- drawable -------
 
-    private static final int DIRCTION_LEFT = 0;
-    private static final int DIRCTION_TOP = 1;
-    private static final int DIRCTION_RIGHT = 2;
-    private static final int DIRCTION_BOTTOM = 3;
+    private static final int DIRECTION_LEFT = 0;
+    private static final int DIRECTION_TOP = 1;
+    private static final int DIRECTION_RIGHT = 2;
+    private static final int DIRECTION_BOTTOM = 3;
 
     private int mDrawableWidth;
 
@@ -278,12 +281,14 @@ public class XTextView extends TextView {
     /**
      * 指定方向的Drawable，固定宽高
      */
-    private int mDrawableDirection = DIRCTION_LEFT;
+    private int mDrawableDirection = DIRECTION_LEFT;
 
     /**
      * 设置了Drawable的资源是否居中
      */
     private boolean mDrawableCenter = false;
+
+    private int mCurrentTouch = OnDrawableClickListener.INVALID_TOUCH;
 
     // endregion -----------------------
 
@@ -383,7 +388,7 @@ public class XTextView extends TextView {
         mDrawableHeight = array.getDimensionPixelSize(R.styleable.XTextView_tvDrawableHeight, 0);
         mDrawableWidth = array.getDimensionPixelSize(R.styleable.XTextView_tvDrawableWidth, 0);
         mDrawableCenter = array.getBoolean(R.styleable.XTextView_tvDrawableCenter, false);
-        mDrawableDirection = array.getInt(R.styleable.XTextView_tvDrawableDirection, DIRCTION_LEFT);
+        mDrawableDirection = array.getInt(R.styleable.XTextView_tvDrawableDirection, DIRECTION_LEFT);
 
         // endregion ----------------------
         array.recycle();
@@ -571,6 +576,107 @@ public class XTextView extends TextView {
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mCurrentTouch = OnDrawableClickListener.INVALID_TOUCH;
+
+                // drawable上的触摸事件
+                if (hasDrawableLeftRange(event)) {
+                    mCurrentTouch = OnDrawableClickListener.TOUCH_DRAWABLE_LEFT;
+                    return true;
+                }
+
+                if (hasDrawableRightRange(event)) {
+                    mCurrentTouch = OnDrawableClickListener.TOUCH_DRAWABLE_RIGHT;
+                    return true;
+                }
+
+
+                break;
+            case MotionEvent.ACTION_UP:
+
+                if (mCurrentTouch != -1) {
+                    return parseDrawableTouch(event);
+                }
+
+                break;
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    /**
+     * 解析Drawable上的触摸事件
+     *
+     * @param event
+     * @return
+     */
+    private boolean parseDrawableTouch(MotionEvent event) {
+
+        if (mCurrentTouch == OnDrawableClickListener.TOUCH_DRAWABLE_LEFT) {
+            if (hasDrawableLeftRange(event)) {
+                onDrawableClickListener.onDrawableLeftClickListener(this);
+                return true;
+            }
+        } else if (mCurrentTouch == OnDrawableClickListener.TOUCH_DRAWABLE_RIGHT) {
+            if (hasDrawableRightRange(event)) {
+                onDrawableClickListener.onDrawableRightClickListener(this);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 触摸事件位于 drawableRight 上
+     *
+     * @param event
+     * @return
+     */
+    private boolean hasDrawableRightRange(MotionEvent event) {
+        if (onDrawableClickListener == null) {
+            return false;
+        }
+
+        Drawable dRight = getCompoundDrawables()[2];
+        if (dRight == null) {
+            return false;
+        }
+
+        return event.getX() < getWidth() - getPaddingRight()
+                && event.getX() > getWidth() - getPaddingRight() - dRight.getIntrinsicWidth() - getCompoundDrawablePadding()
+                && event.getY() > 0
+                && event.getY() < getHeight();
+    }
+
+    /**
+     * 触摸事件位于drawableLeft上
+     *
+     * @param event
+     * @return
+     */
+    private boolean hasDrawableLeftRange(MotionEvent event) {
+
+        if (onDrawableClickListener == null) {
+            return false;
+        }
+
+        Drawable dLeft = getCompoundDrawables()[0];
+        if (dLeft == null) {
+            return false;
+        }
+
+        return event.getX() >= getPaddingLeft()
+                && event.getX() < getPaddingLeft() + dLeft.getIntrinsicWidth() + getCompoundDrawablePadding()
+                && event.getY() > 0
+                && event.getY() < getHeight();
+    }
+
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         createFixedSizeDrawable();
@@ -647,7 +753,7 @@ public class XTextView extends TextView {
 
         if (drawables[0] != null
                 && (drawables[0] instanceof BitmapDrawable)
-                && mDrawableDirection == DIRCTION_LEFT
+                && mDrawableDirection == DIRECTION_LEFT
                 && mDrawableWidth != 0
                 && mDrawableHeight != 0) {
 
@@ -658,7 +764,7 @@ public class XTextView extends TextView {
 
         if (drawables[1] != null
                 && (drawables[1] instanceof BitmapDrawable)
-                && mDrawableDirection == DIRCTION_TOP
+                && mDrawableDirection == DIRECTION_TOP
                 && mDrawableWidth != 0
                 && mDrawableHeight != 0) {
 
@@ -669,7 +775,7 @@ public class XTextView extends TextView {
 
         if (drawables[2] != null
                 && (drawables[2] instanceof BitmapDrawable)
-                && mDrawableDirection == DIRCTION_RIGHT
+                && mDrawableDirection == DIRECTION_RIGHT
                 && mDrawableWidth != 0
                 && mDrawableHeight != 0) {
 
@@ -680,7 +786,7 @@ public class XTextView extends TextView {
 
         if (drawables[3] != null
                 && (drawables[3] instanceof BitmapDrawable)
-                && mDrawableDirection == DIRCTION_BOTTOM
+                && mDrawableDirection == DIRECTION_BOTTOM
                 && mDrawableWidth != 0
                 && mDrawableHeight != 0) {
 
@@ -1090,7 +1196,7 @@ public class XTextView extends TextView {
      *
      * @param corner
      */
-    public void setCorner(int corner) {
+    public void setCorner(float corner) {
         this.mCorner = corner;
         mCornerLeftTop = INVALIDATE_CORNER_VALUE;
         mCornerRightTop = INVALIDATE_CORNER_VALUE;
@@ -1107,7 +1213,7 @@ public class XTextView extends TextView {
      * @param rightBottom
      * @param leftBottom
      */
-    public void setCorner(int leftTop, int rightTop, int rightBottom, int leftBottom) {
+    public void setCorner(float leftTop, float rightTop, float rightBottom, float leftBottom) {
         mCornerLeftTop = leftTop;
         mCornerRightTop = rightTop;
         mCornerRightBottom = rightBottom;
@@ -1417,10 +1523,10 @@ public class XTextView extends TextView {
      * Drawable指定方向固定大小
      */
     public enum DrawableDirection {
-        LEFT(DIRCTION_LEFT),
-        TOP(DIRCTION_TOP),
-        RIGHT(DIRCTION_RIGHT),
-        BOTTOM(DIRCTION_BOTTOM);
+        LEFT(DIRECTION_LEFT),
+        TOP(DIRECTION_TOP),
+        RIGHT(DIRECTION_RIGHT),
+        BOTTOM(DIRECTION_BOTTOM);
 
         int direction;
 
@@ -1434,5 +1540,15 @@ public class XTextView extends TextView {
     }
 
     // endregion -----------------------
+
+    // region ----------- 回调函数 ----------------
+
+    private OnDrawableClickListener onDrawableClickListener;
+
+    public void setOnDrawableClickListener(OnDrawableClickListener onDrawableClickListener) {
+        this.onDrawableClickListener = onDrawableClickListener;
+    }
+
+    // endregion ---------------------------------
 
 }

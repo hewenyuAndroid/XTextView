@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/XTextView/XTextView.iml" filepath="$PROJECT_DIR$/XTextView/XTextView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/XTextView-Android.iml" filepath="$PROJECT_DIR$/XTextView-Android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/XTextViewAndroid.iml" filepath="$PROJECT_DIR$/XTextViewAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

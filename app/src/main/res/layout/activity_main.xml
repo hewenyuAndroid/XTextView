@@ -138,6 +138,7 @@
             android:orientation="vertical">
 
             <com.hwy.textview.XTextView
+                android:onClick="startEdit"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/white"
@@ -319,6 +320,8 @@
                 app:tvUseTagSeparator="true" />
 
             <com.hwy.textview.XTextView
+                android:id="@+id/tv"
+                android:drawableRight="@mipmap/icon"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/white"
