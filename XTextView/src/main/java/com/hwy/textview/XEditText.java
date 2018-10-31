@@ -615,7 +615,7 @@ public class XEditText extends EditText {
             return;
         }
 
-        int cx = getWidth() - getCompoundPaddingRight() + getCrossValidSize() + getScrollX();
+        int cx = getWidth() - getCompoundPaddingRight() + mCrossPadding + mCrossRadius + getScrollX();
         int cy = getPaddingTop() + (getHeight() - getPaddingTop() - getPaddingBottom()) / 2;
 
         mCrossPaint.setColor(mCrossBgColor);
