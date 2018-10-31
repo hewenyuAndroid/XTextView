@@ -291,7 +291,6 @@
                 app:tvTagTextColor="@color/textColor"
                 app:tvTagTextSize="14sp"
                 app:tvTopLineMarginLeft="20dp"
-                app:tvTopLineSize="1dp"
                 app:tvUseTagSeparator="true" />
 
             <com.hwy.textview.XTextView
