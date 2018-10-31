@@ -16,6 +16,7 @@
         android:layout_marginTop="20dp"
         android:background="#FFFFFF"
         android:drawableLeft="@mipmap/icon"
+        android:drawablePadding="10dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:singleLine="true"
@@ -25,14 +26,19 @@
         app:tvBorderColor="@color/bgColor"
         app:tvBorderSize="1dp"
         app:tvCorner="8dp"
+        app:tvCrossBgColor="#FF0000"
+        app:tvCrossLength="4dp"
+        app:tvCrossPadding="8dp"
+        app:tvCrossRadius="10dp"
+        app:tvCrossSize="2dp"
         app:tvDrawableDirection="left"
-        android:drawablePadding="10dp"
         app:tvDrawableHeight="20dp"
         app:tvDrawableWidth="20dp"
         app:tvTagPadding="10dp"
         app:tvTagText="账号"
         app:tvTagTextColor="@color/textColor"
         app:tvTagTextSize="14sp"
+        app:tvUseCross="true"
         app:tvUseTagSeparator="true" />
 
     <com.hwy.textview.XEditText
