@@ -170,6 +170,7 @@
                 app:tvBottomLineSize="1dp"
                 app:tvLineColor="@color/textColor"
                 app:tvTagPadding="10dp"
+                android:onClick="startFold"
                 app:tvTagText="性别"
                 app:tvTagTextColor="@color/textColor"
                 app:tvTagTextSize="14sp"

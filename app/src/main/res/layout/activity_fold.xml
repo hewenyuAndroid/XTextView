@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EBEBEB"
+    android:orientation="vertical"
+    tools:context=".FoldActivity">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="打开"
+        android:onClick="open"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="折叠"
+        android:onClick="fold"/>
+
+    <com.hwy.textview.FoldTextView
+        android:id="@+id/ftv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:text="你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好"
+        android:textSize="30sp"
+        app:foldDuration="200"
+        app:foldGravity="left"
+        app:foldMarginBottom="10dp"
+        app:foldMarginLeft="20dp"
+        app:foldMarginTop="10dp"
+        app:foldTextColor="@color/bgColor"
+        app:foldTextSize="14sp"
+        app:useFold="true" />
+
+</LinearLayout>

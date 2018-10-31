@@ -183,4 +183,26 @@
 
     </declare-styleable>
 
+    <declare-styleable name="FoldTextView">
+        <!-- 是否使用折叠功能 -->
+        <attr name="useFold" format="boolean" />
+        <!-- 折叠时最大的行数 -->
+        <attr name="foldMaxLines" format="integer" />
+        <attr name="foldText" format="string" />
+        <attr name="openText" format="string" />
+        <attr name="foldTextSize" format="dimension|reference" />
+        <attr name="foldTextColor" format="color" />
+        <attr name="foldGravity" format="enum">
+            <enum name="left" value="0" />
+            <enum name="horizontal" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <attr name="foldMarginTop" format="dimension|reference" />
+        <attr name="foldMarginLeft" format="dimension|reference" />
+        <attr name="foldMarginRight" format="dimension|reference" />
+        <attr name="foldMarginBottom" format="dimension|reference" />
+        <!-- 折叠动画的延时 -->
+        <attr name="foldDuration" format="integer" />
+    </declare-styleable>
+
 </resources>

@@ -45,4 +45,8 @@ public class MainActivity extends AppCompatActivity {
     public void startEdit(View view) {
         startActivity(new Intent(this, EditActivity.class));
     }
+
+    public void startFold(View view) {
+        startActivity(new Intent(this, FoldActivity.class));
+    }
 }
