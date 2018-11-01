@@ -188,15 +188,19 @@
         <attr name="useFold" format="boolean" />
         <!-- 折叠时最大的行数 -->
         <attr name="foldMaxLines" format="integer" />
+        <!-- 折叠的文本 -->
         <attr name="foldText" format="string" />
+        <!-- 打开的文本 -->
         <attr name="openText" format="string" />
         <attr name="foldTextSize" format="dimension|reference" />
         <attr name="foldTextColor" format="color" />
+        <!-- 折叠文本显示的位置 -->
         <attr name="foldGravity" format="enum">
             <enum name="left" value="0" />
             <enum name="horizontal" value="1" />
             <enum name="right" value="2" />
         </attr>
+        <!-- 折叠文本的上下左右间距，左间距只有left时有效，右间距只有right时有效 -->
         <attr name="foldMarginTop" format="dimension|reference" />
         <attr name="foldMarginLeft" format="dimension|reference" />
         <attr name="foldMarginRight" format="dimension|reference" />

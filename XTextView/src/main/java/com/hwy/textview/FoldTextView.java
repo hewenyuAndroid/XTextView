@@ -14,7 +14,8 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -122,7 +123,15 @@ public class FoldTextView extends TextView {
      */
     private ValueAnimator mFoldAnimator;
 
+    /**
+     * 缓存item对象中的状态
+     */
     private Map<Object, Boolean> mCache;
+
+    /**
+     * 当前缓存的对象
+     */
+    private Object mCurrentObj;
 
     public FoldTextView(Context context) {
         this(context, null);
@@ -170,7 +179,7 @@ public class FoldTextView extends TextView {
 
         mFoldAnimator = new ValueAnimator();
         mFoldAnimator.setDuration(mFoldDuration);
-        mFoldAnimator.setInterpolator(new AccelerateInterpolator());
+        mFoldAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
         mCache = new HashMap<>();
 
@@ -273,6 +282,11 @@ public class FoldTextView extends TextView {
             mFoldAnimator.setIntValues(mOpenHeight, mFoldHeight);
         }
 
+        // 更新缓存的状态
+        if (mCurrentObj != null) {
+            mCache.put(mCurrentObj, isOpen);
+        }
+
         mFoldAnimator.setDuration(foldDuration);
         mFoldAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -367,14 +381,15 @@ public class FoldTextView extends TextView {
         return rect;
     }
 
+
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (mFoldAnimator != null && mFoldAnimator.isRunning()) {
-            mFoldAnimator.cancel();
-            mFoldAnimator = null;
+    public void setText(CharSequence text, BufferType type) {
+        if (TextUtils.isEmpty(text)) {
+            text = "";
         }
+        super.setText(text, type);
     }
+
 
     /**
      * 设置状态 打开/折叠
@@ -401,5 +416,174 @@ public class FoldTextView extends TextView {
     public boolean getState() {
         return this.isOpen;
     }
+
+    /**
+     * 设置动画插值器
+     *
+     * @param interpolator
+     */
+    public void setInterpolator(Interpolator interpolator) {
+        mFoldAnimator.setInterpolator(interpolator);
+    }
+
+    /**
+     * 设置最大行数
+     *
+     * @param lines
+     */
+    public void setFoldMaxLines(int lines) {
+        if (lines < 1) {
+            lines = 1;
+        }
+        this.mFoldMaxLines = lines;
+        requestLayout();
+    }
+
+    public int getFoldMaxLines() {
+        return this.mFoldMaxLines;
+    }
+
+    /**
+     * 设置 打开/折叠的文本
+     *
+     * @param foldText
+     * @param openText
+     */
+    public void setFoldText(String foldText, String openText) {
+        this.mFoldText = foldText;
+        if (TextUtils.isEmpty(mFoldText)) {
+            mFoldText = DEFAULT_FOLD_TEXT;
+        }
+        this.mOpenText = openText;
+        if (TextUtils.isEmpty(mOpenText)) {
+            mOpenText = DEFAULT_OPEN_TEXT;
+        }
+        requestLayout();
+    }
+
+    public String getFoldText() {
+        return this.mFoldText;
+    }
+
+    public String getOpenText() {
+        return this.mOpenText;
+    }
+
+    public void setFoldTextSize(int textSize) {
+        this.mFoldTextSize = textSize;
+        mFoldPaint.setTextSize(mFoldTextSize);
+        requestLayout();
+    }
+
+    public int getFoldTextSize() {
+        return this.mFoldTextSize;
+    }
+
+    public void setFoldTextColor(int textColor) {
+        this.mFoldTextColor = textColor;
+        invalidate();
+    }
+
+    public int getFoldTextColor() {
+        return this.mFoldTextColor;
+    }
+
+    /**
+     * 设置间距
+     *
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
+    public void setFoldMargin(int left, int top, int right, int bottom) {
+        this.mFoldMarginLeft = left < 0 ? mFoldMarginLeft : left;
+        this.mFoldMarginTop = top < 0 ? mFoldMarginTop : top;
+        this.mFoldMarginRight = right < 0 ? mFoldMarginRight : right;
+        this.mFoldMarginBottom = bottom < 0 ? mFoldMarginBottom : bottom;
+        requestLayout();
+    }
+
+    /**
+     * 设置折叠文字的位置
+     *
+     * @param gravity
+     */
+    public void setFoldGravity(FoldGravity gravity) {
+        if (gravity.getGravity() != mFoldGravity) {
+            this.mFoldGravity = gravity.getGravity();
+            requestLayout();
+        }
+    }
+
+    /**
+     * 是否使用折叠功能
+     *
+     * @param useFold
+     */
+    public void setUseFold(boolean useFold) {
+        if (this.useFold != useFold) {
+            this.useFold = useFold;
+            requestLayout();
+        }
+    }
+
+    public boolean isUseFold() {
+        return this.useFold;
+    }
+
+    /**
+     * 折叠动画的时间
+     *
+     * @param foldDuration
+     */
+    public void setFoldDuration(int foldDuration) {
+        this.mFoldDuration = foldDuration;
+    }
+
+    public int getFoldDuration() {
+        return this.mFoldDuration;
+    }
+
+
+    /**
+     * 更新缓存的状态，防止列表中View复用的时候造成的错乱
+     *
+     * @param object
+     */
+    public void bindObjState(Object object) {
+        if (!useFold) {
+            return;
+        }
+        if (!mCache.containsKey(object)) {
+            mCache.put(object, false);
+        }
+        mCurrentObj = object;
+
+        isOpen = mCache.get(object);
+        requestLayout();
+    }
+
+    // region ------------- enum -------------------
+
+    public enum FoldGravity {
+
+        LEFT(FoldTextView.LEFT),
+        HORIZONTAL(FoldTextView.HORIZONTAL),
+        RIGHT(FoldTextView.RIGHT);
+
+        private int gravity;
+
+        FoldGravity(int gravity) {
+            this.gravity = gravity;
+        }
+
+        public int getGravity() {
+            return this.gravity;
+        }
+
+    }
+
+    // endregion -------------------------------------
 
 }
