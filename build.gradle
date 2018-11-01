@@ -23,3 +23,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+// Execution failed for task ':XTextView:javadoc'. 提交到Jcenter时报错解决方案
+tasks.getByPath(":XTextView:javadoc").enabled=false

@@ -1,5 +1,12 @@
 # XTextView
-项目开发过程中TextView经常会被使用到，本项目封装了一些TextView、EditText的常用功能
+项目开发过程中TextView经常会被使用到，本项目封装了一些TextView、EditText的常用功能后期会计需扩展这两个系列...
+### 已完成的功能
+1. XTextView
+2. XEditText
+3. FoldTextView
+
+### 引用方式
+> compile 'com.hewenyu:XTextView:1.0'
 
 ### XTextView
 
@@ -23,7 +30,6 @@ XTextView 封装了TextView常见的一些功能，例如：我们需要将一�
 
 ```
 
-### 相关属性
 | 形状/背景/状态相关属性        | 说明   |
 | --------   | -----  | 
 |tvShape     |TextView的形状，可选square/circle |
@@ -108,7 +114,7 @@ XEditText 封装了常见的一些功能，包括：圆角、边框、Tag标签�
 ```
 
 
-| 形状/背景/状态相关属性        | 说明   |
+| 形状/背景相关属性        | 说明   |
 | --------   | -----  | 
 |tvCorner        |如果对某个角单独设置了corner，则以单独设置为准  | 
 |tvCornerLeftTop        |左上角的圆角半径  | 
@@ -123,7 +129,7 @@ XEditText 封装了常见的一些功能，包括：圆角、边框、Tag标签�
 |tvBottomLineMarginRight    |底部线条与右侧的间距   |
 
 
-| tag/drawable/badge相关属性        | 说明   |
+| tag/drawable相关属性        | 说明   |
 | --------   | -----  | 
 |tvTagText      |Tag显示的文本 |
 |tvTagTextColor |Tag文本的颜色 |
@@ -145,3 +151,62 @@ XEditText 封装了常见的一些功能，包括：圆角、边框、Tag标签�
 |tvCrossLength  |清除按钮交叉的长度（相对于半径）|
 |tvCrossSize    |清除按钮交叉的宽度 |
 |tvCrossPadding |类似DrawablePadding|
+
+
+### FoldTextView
+
+![FoldTextView](https://github.com/hewenyuAndroid/XTextView-Android/blob/master/app/screen/foldtextview.gif)
+
+FoldTextView 是一个可以折叠的TextView，类似微信朋友圈，如果显示的文本过长，可以折叠，同时支持展开全文，支持展开/收起动画，支持设置动画时长，支持列表显示中（ListView/RecyclerView），保存当前数据位置的展开/折叠状态；
+
+```XML
+<!-- 自定义属性 -->
+<declare-styleable name="FoldTextView">
+    <!-- 是否使用折叠功能，默认true，如果为false，则为TextView -->
+    <attr name="useFold" format="boolean" />
+    <!-- 折叠时最大的行数 -->
+    <attr name="foldMaxLines" format="integer" />
+    <!-- 折叠的文本 -->
+    <attr name="foldText" format="string" />
+    <!-- 打开的文本 -->
+    <attr name="openText" format="string" />
+    <!-- 折叠/打开文本的大小 -->
+    <attr name="foldTextSize" format="dimension|reference" />
+    <!-- 折叠/打开文本的颜色 -->
+    <attr name="foldTextColor" format="color" />
+    <!-- 折叠文本显示的位置 -->
+    <attr name="foldGravity" format="enum">
+        <enum name="left" value="0" />
+        <enum name="horizontal" value="1" />
+        <enum name="right" value="2" />
+    </attr>
+    <!-- 折叠文本的上下左右间距 -->
+    <attr name="foldMarginTop" format="dimension|reference" />
+    <!-- 左间距只有left时有效 -->
+    <attr name="foldMarginLeft" format="dimension|reference" />
+    <!-- 右间距只有right时有效 -->
+    <attr name="foldMarginRight" format="dimension|reference" />
+    <attr name="foldMarginBottom" format="dimension|reference" />
+    <!-- 折叠动画的延时 -->
+    <attr name="foldDuration" format="integer" />
+</declare-styleable>
+```
+
+- 列表中的使用方式，只需要在ListView适配器的getView()中调用一行代码记录当前数据的状态即可（RecyclerView同理）
+```Java
+ @Override
+public View getView(int position, View convertView, ViewGroup parent) {
+    
+    ... 省略代码 ...
+    
+    // 获取需要显示的数据
+    NoticeBean bean = mDatas.get(position);
+    // 如果需要缓存每个数据的状态，只需要调用此方法，将当前数据作为key传入即可
+    viewHolder.tvContent.bindObjState(bean);
+    
+    ... 省略代码 ...
+
+    return convertView;
+}
+
+```
