@@ -315,8 +315,12 @@ public class XEditText extends EditText {
 
     @Override
     public void setInputType(int type) {
+        if (type == InputType.TYPE_TEXT_VARIATION_PASSWORD){
+            type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
+            // 解决显示密码时，字体不一致的问题
+            setTypeface(Typeface.DEFAULT);
+        }
         super.setInputType(type);
-        updateInputType();
     }
 
     /**

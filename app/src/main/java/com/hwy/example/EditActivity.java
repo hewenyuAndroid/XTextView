@@ -3,6 +3,7 @@ package com.hwy.example;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,9 @@ public class EditActivity extends AppCompatActivity {
 
             }
         });
+
+//        et.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+
 
     }
 
