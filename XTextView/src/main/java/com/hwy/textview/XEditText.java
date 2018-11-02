@@ -9,17 +9,20 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import com.hwy.textview.listener.OnDrawableClickListener;
@@ -306,6 +309,51 @@ public class XEditText extends EditText {
             setSingleLine(true);
         }
 
+        updateInputType();
+
+    }
+
+    @Override
+    public void setInputType(int type) {
+        super.setInputType(type);
+        updateInputType();
+    }
+
+    /**
+     * 更新密码显示
+     */
+    private void updateInputType() {
+        if (isPassword()) {
+            // 解决密码显示明文的问题
+            setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            // 解决显示密码时，字体不一致的问题
+            setTypeface(Typeface.DEFAULT);
+        } else {
+            setInputType(InputType.TYPE_CLASS_TEXT);
+        }
+    }
+
+    /**
+     * 判断是否是密码
+     *
+     * @return
+     */
+    private boolean isPassword() {
+        final int variation =
+                getInputType() & (EditorInfo.TYPE_MASK_CLASS | EditorInfo.TYPE_MASK_VARIATION);
+        if (variation == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD)) {
+            // textPassword
+            return true;
+        }
+        if (variation
+                == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_WEB_PASSWORD)) {
+            return true;
+        }
+        if (variation
+                == (EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD)) {
+            return true;
+        }
+        return false;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

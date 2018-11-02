@@ -917,8 +917,8 @@ public class XTextView extends TextView {
         }
 
         // 增加 X、Y的偏移量
-        cx += mBadgeOffsetX;
-        cy += mBadgeOffsetY;
+        cx += mBadgeOffsetX + getScrollX();
+        cy += mBadgeOffsetY = getScrollY();
 
         canvas.drawCircle(cx, cy, mBadgeRadius, mBadgePaint);
 
@@ -980,7 +980,7 @@ public class XTextView extends TextView {
                 baseLine = getBaseline() + (getLineCount() - 1) * getLineHeight();
             }
 
-            canvas.drawText(tempTag, startX, baseLine, mTagPaint);
+            canvas.drawText(tempTag, startX + getScrollX(), baseLine, mTagPaint);
 
         } else if (mTagGravity == TAG_GRAVITY_TOP_HORIZONTAL) {
             // 顶部
@@ -1010,7 +1010,7 @@ public class XTextView extends TextView {
             }
 
             baseLine += getTextBound(tempTag, mTagPaint).height();
-            canvas.drawText(tempTag, startX, baseLine, mTagPaint);
+            canvas.drawText(tempTag, startX + getScrollX(), baseLine, mTagPaint);
         }
 
     }
@@ -1060,31 +1060,31 @@ public class XTextView extends TextView {
         int height = getMeasuredHeight();
 
         if (mBottomLineSize > 0) {
-            mLineRect.left = mBottomLineMarginLeft;
-            mLineRect.top = height - mBottomLineSize;
-            mLineRect.right = width - mBottomLineMarginRight;
-            mLineRect.bottom = height;
+            mLineRect.left = mBottomLineMarginLeft + getScrollX();
+            mLineRect.right = width - mBottomLineMarginRight + getScrollX();
+            mLineRect.top = height - mBottomLineSize + getScrollY();
+            mLineRect.bottom = height + getScrollY();
             canvas.drawRect(mLineRect, mLinePaint);
         }
         if (mTopLineSize > 0) {
-            mLineRect.top = 0;
-            mLineRect.bottom = mTopLineSize;
-            mLineRect.left = mTopLineMarginLeft;
-            mLineRect.right = width - mTopLineMarginRight;
+            mLineRect.left = mTopLineMarginLeft + getScrollX();
+            mLineRect.right = width - mTopLineMarginRight + getScrollX();
+            mLineRect.top = 0 + getScrollY();
+            mLineRect.bottom = mTopLineSize + getScrollY();
             canvas.drawRect(mLineRect, mLinePaint);
         }
         if (mLeftLineSize > 0) {
-            mLineRect.left = 0;
-            mLineRect.right = mLeftLineSize;
-            mLineRect.top = mLeftLineMarginTop;
-            mLineRect.bottom = height - mLeftLineMarginBottom;
+            mLineRect.left = 0 + getScrollX();
+            mLineRect.right = mLeftLineSize + getScrollX();
+            mLineRect.top = mLeftLineMarginTop + getScrollY();
+            mLineRect.bottom = height - mLeftLineMarginBottom + getScrollY();
             canvas.drawRect(mLineRect, mLinePaint);
         }
         if (mRightLineSize > 0) {
-            mLineRect.left = width - mRightLineSize;
-            mLineRect.right = width;
-            mLineRect.top = mRightLineMarginTop;
-            mLineRect.bottom = height - mRightLineMarginBottom;
+            mLineRect.left = width - mRightLineSize + getScrollX();
+            mLineRect.right = width + getScrollX();
+            mLineRect.top = mRightLineMarginTop + getScrollY();
+            mLineRect.bottom = height - mRightLineMarginBottom + getScrollY();
             canvas.drawRect(mLineRect, mLinePaint);
         }
 
