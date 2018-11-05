@@ -918,7 +918,7 @@ public class XTextView extends TextView {
 
         // 增加 X、Y的偏移量
         cx += mBadgeOffsetX + getScrollX();
-        cy += mBadgeOffsetY = getScrollY();
+        cy += mBadgeOffsetY + getScrollY();
 
         canvas.drawCircle(cx, cy, mBadgeRadius, mBadgePaint);
 
