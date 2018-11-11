@@ -6,7 +6,7 @@
 3. FoldTextView
 
 ### 引用方式
-> compile 'com.hewenyu:XTextView:1.2.1'
+> compile 'com.hewenyu:XTextView:1.2.2'
 
 ### XTextView
 
@@ -67,6 +67,7 @@ XTextView 封装了TextView常见的一些功能，例如：我们需要将一�
 
 | tag/drawable/badge相关属性        | 说明   |
 | --------   | -----  | 
+|tvTagWidth      |Tag的宽度（left时有效） |
 |tvTagText      |Tag显示的文本 |
 |tvTagTextColor |Tag文本的颜色 |
 |tvTagTextSize  |Tag文本的大小 |

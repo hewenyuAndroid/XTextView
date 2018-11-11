@@ -207,6 +207,10 @@ public class XTextView extends TextView {
      */
     private int mTagTextLength;
 
+    /**
+     * tag的宽度
+     */
+    private int mTagWidth;
 
     // endregion -----------------------
 
@@ -366,6 +370,7 @@ public class XTextView extends TextView {
         useTagSeparator = array.getBoolean(R.styleable.XTextView_tvUseTagSeparator, false);
         mTagPadding = array.getDimensionPixelSize(R.styleable.XTextView_tvTagPadding, 0);
         mTagGravity = array.getInt(R.styleable.XTextView_tvTagGravity, TAG_GRAVITY_LEFT_TOP);
+        mTagWidth = array.getDimensionPixelSize(R.styleable.XTextView_tvTagWidth, -1);
 
         // endregion ----------------------
 
@@ -1035,6 +1040,7 @@ public class XTextView extends TextView {
     // 增加左侧Tag的间距
     @Override
     public int getCompoundPaddingLeft() {
+
         if (!TextUtils.isEmpty(mTagText)
                 && (mTagGravity == TAG_GRAVITY_LEFT_TOP
                 || mTagGravity == TAG_GRAVITY_LEFT_VERTICAL
@@ -1045,6 +1051,10 @@ public class XTextView extends TextView {
 
         } else {
             mTagTextLength = 0;
+        }
+
+        if (mTagWidth > 0) {
+            mTagTextLength = mTagTextLength > mTagWidth ? mTagTextLength : mTagWidth;
         }
 
         return super.getCompoundPaddingLeft() + mTagTextLength;
@@ -1271,6 +1281,7 @@ public class XTextView extends TextView {
             tagText = "";
         }
         this.mTagText = tagText.toString();
+        requestLayout();
         invalidate();
     }
 

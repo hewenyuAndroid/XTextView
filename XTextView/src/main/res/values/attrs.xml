@@ -134,6 +134,8 @@
         <attr name="tvRightLineMarginBottom" format="dimension|reference" />
 
         <!-- TAG相关 -->
+        <!-- tag的宽度固定 -->
+        <attr name="tvTagWidth" format="string|reference" />
         <attr name="tvTagText" />
         <attr name="tvTagTextColor" />
         <attr name="tvTagTextSize" />
