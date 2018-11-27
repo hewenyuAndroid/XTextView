@@ -315,7 +315,7 @@ public class XEditText extends EditText {
 
     @Override
     public void setInputType(int type) {
-        if (type == InputType.TYPE_TEXT_VARIATION_PASSWORD){
+        if (type == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
             type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
             // 解决显示密码时，字体不一致的问题
             setTypeface(Typeface.DEFAULT);
@@ -796,7 +796,6 @@ public class XEditText extends EditText {
      * 输入框左右抖动
      *
      * @param counts 左右抖动的次数
-     * @return
      */
     public void startShake(int counts) {
         if (translateAnimation == null) {

@@ -6,7 +6,7 @@
 3. FoldTextView
 
 ### 引用方式
-> compile 'com.hewenyu:XTextView:1.2.3'
+> compile 'com.hewenyu:XTextView:1.2.5'
 
 ### XTextView
 
