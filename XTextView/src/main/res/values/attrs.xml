@@ -148,6 +148,12 @@
             <enum name="leftVertical" value="2" />
             <!-- 左下角 -->
             <enum name="leftBottom" value="3" />
+            <!-- 右上角 -->
+            <enum name="rightTop" value="4" />
+            <!-- 右侧垂直居中 -->
+            <enum name="rightVertical" value="5" />
+            <!-- 右下角 -->
+            <enum name="rightBottom" value="6" />
         </attr>
         <attr name="tvTagPadding" />
         <attr name="tvUseTagSeparator" />

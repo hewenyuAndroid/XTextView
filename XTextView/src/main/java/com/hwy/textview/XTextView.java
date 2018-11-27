@@ -56,6 +56,9 @@ public class XTextView extends TextView {
     private static final int TAG_GRAVITY_TOP_HORIZONTAL = 1;
     private static final int TAG_GRAVITY_LEFT_VERTICAL = 2;
     private static final int TAG_GRAVITY_LEFT_BOTTOM = 3;
+    private static final int TAG_GRAVITY_RIGHT_TOP = 4;
+    private static final int TAG_GRAVITY_RIGHT_VERTICAL = 5;
+    private static final int TAG_GRAVITY_RIGHT_BOTTOM = 6;
 
     // endregion ------------------------
 
@@ -1016,6 +1019,31 @@ public class XTextView extends TextView {
 
             baseLine += getTextBound(tempTag, mTagPaint).height();
             canvas.drawText(tempTag, startX + getScrollX(), baseLine, mTagPaint);
+        } else if (mTagGravity == TAG_GRAVITY_RIGHT_TOP
+                || mTagGravity == TAG_GRAVITY_RIGHT_VERTICAL
+                || mTagGravity == TAG_GRAVITY_RIGHT_BOTTOM) {
+            // 画笔右对齐
+            mTagPaint.setTextAlign(Paint.Align.RIGHT);
+            // 右侧
+            tempTag = useTagSeparator ? mTagSeparator + mTagText : mTagText;
+            // 左侧
+            Drawable dRight = getCompoundDrawables()[2];
+            int startX = getWidth() - getPaddingRight();
+            if (dRight != null) {
+                startX += dRight.getIntrinsicWidth() + getCompoundDrawablePadding();
+            }
+
+            int baseLine = 0;
+
+            if (mTagGravity == TAG_GRAVITY_RIGHT_TOP || getLineCount() == 1) {
+                baseLine = getBaseline();
+            } else if (mTagGravity == TAG_GRAVITY_RIGHT_VERTICAL) {
+                baseLine = (int) (getBaseline() + ((getLineCount() - 1) / 2f) * getLineHeight());
+            } else if (mTagGravity == TAG_GRAVITY_RIGHT_BOTTOM) {
+                baseLine = getBaseline() + (getLineCount() - 1) * getLineHeight();
+            }
+
+            canvas.drawText(tempTag, startX + getScrollX(), baseLine, mTagPaint);
         }
 
     }
@@ -1048,7 +1076,6 @@ public class XTextView extends TextView {
 
             String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
             mTagTextLength = getTextBound(tempTag, mTagPaint).width() + mTagPadding;
-
         } else {
             mTagTextLength = 0;
         }
@@ -1060,6 +1087,27 @@ public class XTextView extends TextView {
         return super.getCompoundPaddingLeft() + mTagTextLength;
     }
 
+
+    @Override
+    public int getCompoundPaddingRight() {
+
+        if (!TextUtils.isEmpty(mTagText)
+                && (mTagGravity == TAG_GRAVITY_RIGHT_TOP
+                || mTagGravity == TAG_GRAVITY_RIGHT_VERTICAL
+                || mTagGravity == TAG_GRAVITY_RIGHT_BOTTOM)) {
+
+            String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
+            mTagTextLength = getTextBound(tempTag, mTagPaint).width() + mTagPadding;
+        } else {
+            mTagTextLength = 0;
+        }
+
+        if (mTagWidth > 0) {
+            mTagTextLength = mTagTextLength > mTagWidth ? mTagTextLength : mTagWidth;
+        }
+
+        return super.getCompoundPaddingRight() + mTagTextLength;
+    }
 
     /**
      * 绘制四周的线条
@@ -1478,7 +1526,10 @@ public class XTextView extends TextView {
         LEFT_TOP(XTextView.TAG_GRAVITY_LEFT_TOP),
         TOP_HORIZONTAL(XTextView.TAG_GRAVITY_TOP_HORIZONTAL),
         LEFT_VERTICAL(XTextView.TAG_GRAVITY_LEFT_VERTICAL),
-        LEFT_BOTTOM(XTextView.TAG_GRAVITY_LEFT_BOTTOM);
+        LEFT_BOTTOM(XTextView.TAG_GRAVITY_LEFT_BOTTOM),
+        RIGHT_TOP(XTextView.TAG_GRAVITY_RIGHT_TOP),
+        RIGHT_VERTICAL(XTextView.TAG_GRAVITY_RIGHT_VERTICAL),
+        RIGHT_BOTTOM(XTextView.TAG_GRAVITY_RIGHT_BOTTOM);
 
         int gravity;
 
