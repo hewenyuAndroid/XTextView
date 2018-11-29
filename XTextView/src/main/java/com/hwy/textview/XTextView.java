@@ -1166,6 +1166,7 @@ public class XTextView extends TextView {
             // 防止空指针异常
             text = "";
         }
+
         super.setText(text, type);
     }
 
