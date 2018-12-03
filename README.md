@@ -4,9 +4,10 @@
 1. XTextView
 2. XEditText
 3. FoldTextView
+4. XRadioButton(数字提示功能)
 
 ### 引用方式
-> compile 'com.hewenyu:XTextView:1.2.5'
+> compile 'com.hewenyu:XTextView:1.2.6'
 
 ### XTextView
 
