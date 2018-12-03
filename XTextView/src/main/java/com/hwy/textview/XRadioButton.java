@@ -83,17 +83,17 @@ public class XRadioButton extends RadioButton {
      */
     private int mBadgeStyle = BADGE_NUMBER;
 
-    public XRadioButton(Context context) {
-        this(context, null);
-    }
-
     public XRadioButton(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        initType(context, attrs);
     }
 
     public XRadioButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initType(context, attrs);
+    }
 
+    private void initType(Context context, AttributeSet attrs) {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.XRadioButton);
         mBadgeStyle = array.getInt(R.styleable.XRadioButton_tvBadgeStyle, BADGE_NUMBER);
         mBadgeText = array.getInt(R.styleable.XRadioButton_tvBadgeText, 0);
@@ -110,7 +110,6 @@ public class XRadioButton extends RadioButton {
             mOverflowBadge = "99+";
         }
         array.recycle();
-
         init();
     }
 

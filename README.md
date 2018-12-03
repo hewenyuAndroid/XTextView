@@ -7,7 +7,7 @@
 4. XRadioButton(数字提示功能)
 
 ### 引用方式
-> compile 'com.hewenyu:XTextView:1.2.6'
+> compile 'com.hewenyu:XTextView:1.2.7'
 
 ### XTextView
 
