@@ -35,6 +35,31 @@
     <!-- 设置了 Drawable 后，显示的内容是否居中,left,top有效 -->
     <attr name="tvDrawableCenter" format="boolean" />
 
+    <!-- Badge相关 -->
+    <attr name="tvBadgeText" format="integer" />
+    <attr name="tvBadgeTextColor" format="color|reference" />
+    <attr name="tvBadgeTextSize" format="dimension|reference" />
+    <attr name="tvBadgeBgColor" format="color|reference" />
+    <attr name="tvBadgeRadius" format="dimension|reference" />
+    <!-- 显示红点还是带数字的徽章 -->
+    <attr name="tvBadgeStyle" format="enum">
+        <enum name="number" value="0" />
+        <enum name="dot" value="1" />
+    </attr>
+    <!-- 设置徽章显示的位置 -->
+    <attr name="tvBadgeLocal" format="enum">
+        <enum name="text" value="0" />
+        <enum name="tag" value="1" />
+        <enum name="drawable" value="2" />
+    </attr>
+    <!-- badge在X位置上的偏移量 -->
+    <attr name="tvBadgeOffsetX" format="dimension|reference" />
+    <!-- badge在Y位置上的偏移量 -->
+    <attr name="tvBadgeOffsetY" format="dimension|reference" />
+
+
+    <!-- ================================================================== -->
+
 
     <declare-styleable name="XEditText">
         <!-- 圆角 -->
@@ -160,26 +185,19 @@
         <attr name="tvTagSeparator" />
 
         <!-- Badge相关 -->
-        <attr name="tvBadgeText" format="integer" />
-        <attr name="tvBadgeTextColor" format="color|reference" />
-        <attr name="tvBadgeTextSize" format="dimension|reference" />
-        <attr name="tvBadgeBgColor" format="color|reference" />
-        <attr name="tvBadgeRadius" format="dimension|reference" />
+        <attr name="tvBadgeText" />
+        <attr name="tvBadgeTextColor" />
+        <attr name="tvBadgeTextSize" />
+        <attr name="tvBadgeBgColor" />
+        <attr name="tvBadgeRadius" />
         <!-- 显示红点还是带数字的徽章 -->
-        <attr name="tvBadgeStyle" format="enum">
-            <enum name="number" value="0" />
-            <enum name="dot" value="1" />
-        </attr>
+        <attr name="tvBadgeStyle" />
         <!-- 设置徽章显示的位置 -->
-        <attr name="tvBadgeLocal" format="enum">
-            <enum name="text" value="0" />
-            <enum name="tag" value="1" />
-            <enum name="drawable" value="2" />
-        </attr>
+        <attr name="tvBadgeLocal" />
         <!-- badge在X位置上的偏移量 -->
-        <attr name="tvBadgeOffsetX" format="dimension|reference" />
+        <attr name="tvBadgeOffsetX" />
         <!-- badge在Y位置上的偏移量 -->
-        <attr name="tvBadgeOffsetY" format="dimension|reference" />
+        <attr name="tvBadgeOffsetY" />
 
         <!-- 指定 Drawable 的宽高-->
         <attr name="tvDrawableWidth" />
@@ -215,6 +233,25 @@
         <attr name="foldMarginBottom" format="dimension|reference" />
         <!-- 折叠动画的延时 -->
         <attr name="foldDuration" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="XRadioButton">
+        <attr name="tvBadgeText" />
+        <attr name="tvBadgeTextColor" />
+        <attr name="tvBadgeTextSize" />
+        <attr name="tvBadgeBgColor" />
+        <attr name="tvBadgeRadius" />
+        <attr name="tvBadgeStyle" />
+        <!-- 最大值 -->
+        <attr name="tvBadgeMaxValue" format="integer" />
+        <!-- 数字大于最大值时显示的内容 -->
+        <attr name="tvBadgeOverflow" format="string" />
+        <!-- badge在X位置上的偏移量 -->
+        <attr name="tvBadgeOffsetX" />
+        <!-- badge在Y位置上的偏移量 -->
+        <attr name="tvBadgeOffsetY" />
+        <!-- 设置了 Drawable 后，显示的内容是否居中,left,top有效 -->
+        <attr name="tvDrawableCenter" />
     </declare-styleable>
 
 </resources>
