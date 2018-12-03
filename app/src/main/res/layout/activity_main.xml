@@ -449,6 +449,26 @@
                 app:tvLineColor="@color/textColor"
                 app:tvUseTagSeparator="true" />
 
+            <com.hwy.textview.XRadioButton
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@mipmap/icon"
+                android:drawablePadding="2dp"
+                android:gravity="center_horizontal"
+                android:text="主页"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                app:tvBadgeBgColor="#FF0000"
+                app:tvBadgeMaxValue="100"
+                app:tvBadgeOffsetX="0dp"
+                app:tvBadgeOffsetY="0dp"
+                app:tvBadgeOverflow="99+"
+                app:tvBadgeRadius="10dp"
+                app:tvBadgeText="1"
+                app:tvBadgeTextColor="#FFFFFF"
+                app:tvBadgeTextSize="10sp" />
+
         </LinearLayout>
 
     </LinearLayout>
