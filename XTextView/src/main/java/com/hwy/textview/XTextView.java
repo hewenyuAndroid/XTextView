@@ -1084,7 +1084,16 @@ public class XTextView extends TextView {
             mTagTextLength = mTagTextLength > mTagWidth ? mTagTextLength : mTagWidth;
         }
 
-        return super.getCompoundPaddingLeft() + mTagTextLength;
+        if (!TextUtils.isEmpty(mTagText)
+                && (mTagGravity == TAG_GRAVITY_LEFT_TOP
+                || mTagGravity == TAG_GRAVITY_LEFT_VERTICAL
+                || mTagGravity == TAG_GRAVITY_LEFT_BOTTOM)) {
+
+            return super.getCompoundPaddingLeft() + mTagTextLength;
+        } else {
+            return super.getCompoundPaddingLeft();
+        }
+
     }
 
 
@@ -1106,7 +1115,15 @@ public class XTextView extends TextView {
             mTagTextLength = mTagTextLength > mTagWidth ? mTagTextLength : mTagWidth;
         }
 
-        return super.getCompoundPaddingRight() + mTagTextLength;
+        if (!TextUtils.isEmpty(mTagText)
+                && (mTagGravity == TAG_GRAVITY_RIGHT_TOP
+                || mTagGravity == TAG_GRAVITY_RIGHT_VERTICAL
+                || mTagGravity == TAG_GRAVITY_RIGHT_BOTTOM)) {
+
+            return super.getCompoundPaddingRight() + mTagTextLength;
+        } else {
+            return super.getCompoundPaddingRight();
+        }
     }
 
     /**
