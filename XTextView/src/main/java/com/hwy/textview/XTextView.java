@@ -967,6 +967,8 @@ public class XTextView extends TextView {
 
         String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
 
+        mTagPaint.setColor(mTagTextColor);
+
         if (mTagGravity == TAG_GRAVITY_LEFT_TOP
                 || mTagGravity == TAG_GRAVITY_LEFT_VERTICAL
                 || mTagGravity == TAG_GRAVITY_LEFT_BOTTOM) {
