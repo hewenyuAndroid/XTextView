@@ -59,6 +59,7 @@ public class XTextView extends TextView {
     private static final int TAG_GRAVITY_RIGHT_TOP = 4;
     private static final int TAG_GRAVITY_RIGHT_VERTICAL = 5;
     private static final int TAG_GRAVITY_RIGHT_BOTTOM = 6;
+    private static final int TAG_GRAVITY_TOP_LEFT = 7;
 
     // endregion ------------------------
 
@@ -992,25 +993,16 @@ public class XTextView extends TextView {
 
             canvas.drawText(tempTag, startX + getScrollX(), baseLine, mTagPaint);
 
-        } else if (mTagGravity == TAG_GRAVITY_TOP_HORIZONTAL) {
-            // 顶部
-            mTagPaint.setTextAlign(Paint.Align.CENTER);
+        } else if (mTagGravity == TAG_GRAVITY_TOP_HORIZONTAL || mTagGravity == TAG_GRAVITY_TOP_LEFT) {
+            int cx = 0;
+            if (mTagGravity == TAG_GRAVITY_TOP_HORIZONTAL) {
+                mTagPaint.setTextAlign(Paint.Align.CENTER);
+                cx = (getMeasuredWidth() - getCompoundPaddingLeft() - getCompoundPaddingRight()) / 2 + getCompoundPaddingLeft();
 
-            int startX = 0;
+            } else if (mTagGravity == TAG_GRAVITY_TOP_LEFT) {
+                mTagPaint.setTextAlign(Paint.Align.LEFT);
+                cx = getCompoundPaddingLeft();
 
-            int w = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
-
-            Drawable dRight = getCompoundDrawables()[2];
-            if (dRight != null) {
-                w = w - dRight.getIntrinsicWidth() - getCompoundDrawablePadding();
-            }
-
-            Drawable dLeft = getCompoundDrawables()[0];
-            if (dLeft != null) {
-                w = w - dLeft.getIntrinsicWidth() - getCompoundDrawablePadding();
-                startX = getPaddingLeft() + dLeft.getIntrinsicWidth() + getCompoundDrawablePadding() + w / 2;
-            } else {
-                startX = getPaddingLeft() + w / 2;
             }
 
             int baseLine = getPaddingTop();
@@ -1020,7 +1012,7 @@ public class XTextView extends TextView {
             }
 
             baseLine += getTextBound(tempTag, mTagPaint).height();
-            canvas.drawText(tempTag, startX + getScrollX(), baseLine, mTagPaint);
+            canvas.drawText(tempTag, cx + getScrollX(), baseLine, mTagPaint);
         } else if (mTagGravity == TAG_GRAVITY_RIGHT_TOP
                 || mTagGravity == TAG_GRAVITY_RIGHT_VERTICAL
                 || mTagGravity == TAG_GRAVITY_RIGHT_BOTTOM) {
@@ -1053,7 +1045,8 @@ public class XTextView extends TextView {
     // 增加顶部Tag的间距
     @Override
     public int getExtendedPaddingTop() {
-        if (!TextUtils.isEmpty(mTagText) && mTagGravity == TAG_GRAVITY_TOP_HORIZONTAL) {
+        if (!TextUtils.isEmpty(mTagText)
+                && (mTagGravity == TAG_GRAVITY_TOP_HORIZONTAL || mTagGravity == TAG_GRAVITY_TOP_LEFT)) {
 
             String tempTag = useTagSeparator ? mTagText + mTagSeparator : mTagText;
             mTagTextLength = getTextBound(tempTag, mTagPaint).height() + mTagPadding;
@@ -1544,9 +1537,10 @@ public class XTextView extends TextView {
     public enum TagGravity {
 
         LEFT_TOP(XTextView.TAG_GRAVITY_LEFT_TOP),
-        TOP_HORIZONTAL(XTextView.TAG_GRAVITY_TOP_HORIZONTAL),
         LEFT_VERTICAL(XTextView.TAG_GRAVITY_LEFT_VERTICAL),
         LEFT_BOTTOM(XTextView.TAG_GRAVITY_LEFT_BOTTOM),
+        TOP_HORIZONTAL(XTextView.TAG_GRAVITY_TOP_HORIZONTAL),
+        TOP_LEFT(XTextView.TAG_GRAVITY_TOP_LEFT),
         RIGHT_TOP(XTextView.TAG_GRAVITY_RIGHT_TOP),
         RIGHT_VERTICAL(XTextView.TAG_GRAVITY_RIGHT_VERTICAL),
         RIGHT_BOTTOM(XTextView.TAG_GRAVITY_RIGHT_BOTTOM);
