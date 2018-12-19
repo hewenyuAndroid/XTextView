@@ -1044,7 +1044,7 @@ public class XTextView extends TextView {
 
     // 增加顶部Tag的间距
     @Override
-    public int getExtendedPaddingTop() {
+    public int getCompoundPaddingTop() {
         if (!TextUtils.isEmpty(mTagText)
                 && (mTagGravity == TAG_GRAVITY_TOP_HORIZONTAL || mTagGravity == TAG_GRAVITY_TOP_LEFT)) {
 
@@ -1055,8 +1055,7 @@ public class XTextView extends TextView {
             mTagTextLength = 0;
         }
 
-
-        return super.getExtendedPaddingTop() + mTagTextLength;
+        return super.getCompoundPaddingTop() + mTagTextLength;
     }
 
 
